@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>joust-be-web</artifactId>
+  <packaging>war</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>joust-be-web</finalName>
+  </build>
+  <parent>
+  	<groupId>com.joust</groupId>
+  	<artifactId>joust-be-parent</artifactId>
+  	<version>feature-91815998-SNAPSHOT</version>
+  	<relativePath>../joust-be-parent</relativePath>
+  </parent>
+</project>

@@ -5,7 +5,7 @@
   <groupId>com.joust</groupId>
   <artifactId>joust-be-repo-main</artifactId>
   <version>feature-91815998-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <name>joust-be-repo-main</name>
 
@@ -14,4 +14,7 @@
     <generateBackupPoms>false</generateBackupPoms>
   </properties>
 
- </project>
+  <modules>
+  	<module>../joust-be/joust-be-parent</module>
+  </modules>
+</project>
