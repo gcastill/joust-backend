@@ -4,7 +4,7 @@
 
   <groupId>com.joust</groupId>
   <artifactId>joust-be-repo-main</artifactId>
-  <version>feature-91815998-SNAPSHOT</version>
+  <version>develop-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>joust-be-repo-main</name>

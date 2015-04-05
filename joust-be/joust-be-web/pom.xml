@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.joust</groupId>
     <artifactId>joust-be-parent</artifactId>
-    <version>feature-91815998-SNAPSHOT</version>
+    <version>develop-SNAPSHOT</version>
     <relativePath>../joust-be-parent</relativePath>
   </parent>
 
