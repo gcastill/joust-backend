@@ -57,30 +57,7 @@
 			$('#email').text(profile.getEmail());
 			$('#info').show();
 
-			$("#logout").attr("data-token",
-					googleUser.getAuthResponse().access_token);
-
 		};
-
-		function disconnectUser() {
-			var access_token = $("#logout").attr("data-token");
-			console.log(access_token);
-			var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token='
-					+ access_token;
-
-			// Perform an asynchronous GET request.
-			$.ajax({
-				type : 'GET',
-				url : revokeUrl,
-				async : false,
-				contentType : "application/json",
-				dataType : 'jsonp',
-				success : function(nullResponse) {
-					$("#login").show();
-					$("#info").hide();
-				}
-			});
-		}
 	</script>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -92,7 +69,10 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#logout").click(function() {
-				disconnectUser();			});
+				gapi.auth2.getAuthInstance().signOut();
+				$("#login").show();
+				$("#info").hide();
+			});
 		});
 	</script>
 </body>
