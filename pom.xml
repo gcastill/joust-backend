@@ -15,6 +15,6 @@
   </properties>
 
   <modules>
-  	<module>../joust-be/joust-be-parent</module>
+  	<module>joust-be/joust-be-parent</module>
   </modules>
 </project>
