@@ -1,1 +1,1 @@
-web: mvn tomcat7:run-war 
+web: java $JAVA_OPTS -cp target/classes:target/dependency/* com.joust.be.BackendMain
