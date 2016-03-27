@@ -4,6 +4,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Controller;
 
@@ -15,9 +16,18 @@ public class HeartbeatController {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Heartbeat getHeartbeat() {
+  public Response getHeartbeat() {
+
     Heartbeat hb = new Heartbeat();
-    hb.setMessage("Hello, World!");
-    return hb;
+    hb.setMessage("I'm here");
+
+    // TODO: hard coded for now.
+    hb.setVersion("0.0.2");
+
+    // TODO: hard coded for now.
+    hb.setBuild("0.0.2-dev");
+    
+    
+    return Response.ok(hb).build();
   }
 }
