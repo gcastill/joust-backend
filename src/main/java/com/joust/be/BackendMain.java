@@ -12,12 +12,9 @@ public class BackendMain {
 
 	public static void main(String[] args) throws Exception {
 
-		String webappDirLocation = "src/main/webapp/";
 		Tomcat tomcat = new Tomcat();
+		tomcat.setBaseDir("target");
 
-		// The port that we should run on can be set into an environment
-		// variable
-		// Look for that variable and default to 8080 if it isn't there.
 		String webPort = System.getenv("PORT");
 		if (webPort == null || webPort.isEmpty()) {
 			webPort = "8080";
@@ -25,18 +22,19 @@ public class BackendMain {
 
 		tomcat.setPort(Integer.valueOf(webPort));
 
-		StandardContext ctx = (StandardContext) tomcat.addWebapp("", new File(webappDirLocation).getAbsolutePath());
+		File webapp = new File("src/main/webapp/");
+		StandardContext ctx = (StandardContext) tomcat.addWebapp("", webapp.getAbsolutePath());
 
 		// Declare an alternative location for your "WEB-INF/classes" dir
 		// Servlet 3.0 annotation will work
-		File additionWebInfClasses = new File("target/classes");
+		File classes = new File("target/classes");
 		WebResourceRoot resources = new StandardRoot(ctx);
-		resources.addPreResources(
-				new DirResourceSet(resources, "/WEB-INF/classes", additionWebInfClasses.getAbsolutePath(), "/"));
+
+		resources.addPreResources(new DirResourceSet(resources, "/WEB-INF/classes", classes.getAbsolutePath(), "/"));
 		ctx.setResources(resources);
 
 		// Define and bind web.xml file location.
-		File configFile = new File(webappDirLocation, "WEB-INF/web.xml");
+		File configFile = new File(webapp, "WEB-INF/web.xml");
 		ctx.setConfigFile(configFile.toURI().toURL());
 
 		tomcat.start();
