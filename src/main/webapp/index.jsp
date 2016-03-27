@@ -22,12 +22,10 @@
 
 <body>
 	<div id='login' class="container">
-		<h2 class="form-signin-heading">Please sign in with your Google
-			account.</h2>
+		<h2 class="form-signin-heading">Please sign into Google.</h2>
 		<div id='google-login' class="g-signin2" data-onsuccess="onSignIn"
 			data-theme="dark"></div>
 	</div>
-
 
 	<div id='info' class="container" style="display: none;">
 		<div>
@@ -42,31 +40,47 @@
 		<div>
 			<span id='email'></span>
 		</div>
+		<button id='logout' type="button" class="btn btn-primary">Logout</button>
+
 	</div>
 
 	<script>
 		function onSignIn(googleUser) {
+
 			// Useful data for your client-side scripts:
 			var profile = googleUser.getBasicProfile();
-			console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-			console.log('Full Name: ' + profile.getName());
-			console.log('Given Name: ' + profile.getGivenName());
-			console.log('Family Name: ' + profile.getFamilyName());
-			console.log("Image URL: " + profile.getImageUrl());
-			console.log("Email: " + profile.getEmail());
 
-			// The ID token you need to pass to your backend:
-			var id_token = googleUser.getAuthResponse().id_token;
-			console.log("ID Token: " + id_token);
-			$('#login').hide();
-			$('#google-login').hide();
-
+			$("#login").hide();
 			$('#img').attr("src", profile.getImageUrl());
 			$('#given-name').text(profile.getGivenName());
 			$('#family-name').text(profile.getFamilyName());
 			$('#email').text(profile.getEmail());
 			$('#info').show();
+
+			$("#logout").attr("data-token",
+					googleUser.getAuthResponse().access_token);
+
 		};
+
+		function disconnectUser() {
+			var access_token = $("#logout").attr("data-token");
+			console.log(access_token);
+			var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token='
+					+ access_token;
+
+			// Perform an asynchronous GET request.
+			$.ajax({
+				type : 'GET',
+				url : revokeUrl,
+				async : false,
+				contentType : "application/json",
+				dataType : 'jsonp',
+				success : function(nullResponse) {
+					$("#login").show();
+					$("#info").hide();
+				}
+			});
+		}
 	</script>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -74,5 +88,12 @@
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 		integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 		crossorigin="anonymous"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#logout").click(function() {
+				disconnectUser();			});
+		});
+	</script>
 </body>
 </html>
