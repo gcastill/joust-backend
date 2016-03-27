@@ -1,1 +1,1 @@
-web: mvn tomcat7:run-war pom.xml
+web: mvn tomcat7:run-war 
