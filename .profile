@@ -1,0 +1,1 @@
+export JAVA_OPTS="$JAVA_OPTS -Dlog4j.configuration=file:target/joust-backend/etc/log4j.xml";
