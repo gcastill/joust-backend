@@ -9,7 +9,7 @@
   <context:component-scan base-package="com.joust.be.web.controller" />
 
   <bean class="java.net.URI" id="dbUrl">
-    <constructor-arg value="#{systemEnvironment['DATABASE_URL']}" />
+    <constructor-arg value="#{systemEnvironment['HEROKU_POSTGRESQL_AMBER_URL']}" />
   </bean>
 
   <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
