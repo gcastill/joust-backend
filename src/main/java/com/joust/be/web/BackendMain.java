@@ -1,4 +1,4 @@
-package com.joust.be;
+package com.joust.be.web;
 
 import java.io.File;
 

@@ -1,1 +1,1 @@
-web: java -cp target/classes:target/dependency/* com.joust.be.BackendMain
+web: java -cp target/joust-backend/lib/* com.joust.be.web.BackendMain
