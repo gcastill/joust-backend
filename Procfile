@@ -1,1 +1,1 @@
-web: mvn tomcat7:run-war -f joust-be/joust-be-web/pom.xml
+web: mvn tomcat7:run-war pom.xml

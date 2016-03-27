@@ -6,8 +6,8 @@
   <parent>
     <groupId>com.joust</groupId>
     <artifactId>joust-be-repo-main</artifactId>
-    <version>0.0.2</version>
-    <relativePath>../../pom.xml</relativePath>
+    <version>develop-SNAPSHOT</version>
+    <relativePath>../../joust-be-repo-main/pom.xml</relativePath>
   </parent>
 
   <modules>
@@ -17,10 +17,7 @@
   <artifactId>joust-be-parent</artifactId>
   <packaging>pom</packaging>
 
-  <properties>
-    <spring.version>4.1.6.RELEASE</spring.version>
-    <jersey.version>2.22.1</jersey.version>
-  </properties>
+
 
 
   <dependencyManagement>
