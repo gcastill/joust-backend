@@ -8,6 +8,16 @@
 
   <context:component-scan base-package="com.joust.be.web.controller" />
 
+  <bean class="java.net.URI" id="dbUrl">
+    <constructor-arg value="#{systemEnvironment['DATABASE_URL']}" />
+  </bean>
+
+  <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <property name="driverClass" value='org.postgresql.Driver' />
+    <property name="jdbcUrl" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }" />
+    <property name="user" value="#{ @dbUrl.getUserInfo().split(':')[0] }" />
+    <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }" />
+  </bean>
 
 
 </beans>

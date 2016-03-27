@@ -4,11 +4,18 @@
   <formats>
     <format>dir</format>
   </formats>
- <includeBaseDirectory>false</includeBaseDirectory>
+  <includeBaseDirectory>false</includeBaseDirectory>
   <dependencySets>
     <dependencySet>
       <outputDirectory>/lib</outputDirectory>
       <useProjectArtifact>true</useProjectArtifact>
     </dependencySet>
   </dependencySets>
+
+  <fileSets>
+    <fileSet>
+      <outputDirectory>etc</outputDirectory>
+      <directory>etc</directory>
+    </fileSet>
+  </fileSets>
 </assembly>
