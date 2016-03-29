@@ -2,19 +2,17 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.joust</groupId>
-  <artifactId>joust-be-repo-main</artifactId>
-  <version>develop-SNAPSHOT</version>
+
+
+  <groupId>com.joust.backend</groupId>
+  <artifactId>repo-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>joust-be-repo-main</name>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <generateBackupPoms>false</generateBackupPoms>
-  </properties>
-
+  <description>this is just a dummy pom to be compatible with herokus java build pack</description>
   <modules>
-  	<module>joust-be/joust-be-parent</module>
+    <module>joust-backend-parent</module>
   </modules>
+
+
 </project>
