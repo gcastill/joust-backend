@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp "target/joust-backend/lib/*" com.joust.be.web.BackendMain
+web: java $JAVA_OPTS -cp "target/joust-backend/etc:target/joust-backend/lib/*" com.joust.be.web.BackendMain

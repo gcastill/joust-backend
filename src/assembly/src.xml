@@ -17,5 +17,10 @@
       <outputDirectory>etc</outputDirectory>
       <directory>etc</directory>
     </fileSet>
+    <fileSet>
+      <outputDirectory>etc</outputDirectory>
+      <directory>templates/etc</directory>
+      <filtered>true</filtered>
+    </fileSet>
   </fileSets>
 </assembly>
