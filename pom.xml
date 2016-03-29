@@ -1,1 +1,18 @@
-sorry, this is a dirty trick to get heroku to build the app. to build use the mvn clean package -f joust-backend-parent/pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+
+
+  <groupId>com.joust.backend</groupId>
+  <artifactId>repo-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <description>this is just a dummy pom to be compatible with herokus java build pack</description>
+  <modules>
+    <module>joust-backend-parent</module>
+  </modules>
+
+
+</project>

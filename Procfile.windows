@@ -1,1 +1,1 @@
-web: java -Dlog4j.configuration=file:target/joust-backend/etc/log4j.xml -cp target/joust-backend/etc;target/joust-backend/lib/* com.joust.be.web.BackendMain
+web: java  -cp joust-backend-web\target\joust\etc;joust-backend-web\target\joust\lib\* com.joust.be.web.BackendMain

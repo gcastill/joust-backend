@@ -20,14 +20,16 @@ public class BackendMain {
 			webPort = "8080";
 		}
 
+		File baseDir = new File(System.getProperty("project.basedir", "joust-backend-web"));
+
 		tomcat.setPort(Integer.valueOf(webPort));
 
-		File webapp = new File("src/main/webapp/");
+		File webapp = new File(baseDir, "src/main/webapp/");
 		StandardContext ctx = (StandardContext) tomcat.addWebapp("", webapp.getAbsolutePath());
 
 		// Declare an alternative location for your "WEB-INF/classes" dir
 		// Servlet 3.0 annotation will work
-		File classes = new File("target/classes");
+		File classes = new File(baseDir, "target/classes");
 		WebResourceRoot resources = new StandardRoot(ctx);
 
 		resources.addPreResources(new DirResourceSet(resources, "/WEB-INF/classes", classes.getAbsolutePath(), "/"));
