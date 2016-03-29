@@ -47,6 +47,10 @@
 	<script>
 		function onSignIn(googleUser) {
 
+			var idToken = googleUser.getAuthResponse().id_token;
+
+			$.post("<%=request.getContextPath()%>/rest/google/verifyLogin", idToken);
+
 			// Useful data for your client-side scripts:
 			var profile = googleUser.getBasicProfile();
 
