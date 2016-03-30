@@ -17,7 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <generateBackupPoms>false</generateBackupPoms>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
-    <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+    <maven.build.timestamp.format>yyyyMMdd.HHmmss</maven.build.timestamp.format>
     <spring.version>4.1.6.RELEASE</spring.version>
     <jersey.version>2.22.1</jersey.version>
     <tomcat.version>8.0.28</tomcat.version>
