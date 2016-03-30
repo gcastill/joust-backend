@@ -8,7 +8,6 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.StandardRoot;
 
 import de.javakaffee.web.msm.MemcachedBackupSessionManager;
-import de.javakaffee.web.msm.MemcachedSessionService;
 
 public class BackendMain {
 
@@ -44,7 +43,7 @@ public class BackendMain {
     sessionManager.setMemcachedNodes(memcachedServers);
     sessionManager.setUsername(memcachedUsername);
     sessionManager.setPassword(memcachedPassword);
-    sessionManager.setSticky(false);
+    sessionManager.setSticky(true);
     sessionManager.setLockingMode("auto");
     sessionManager.setRequestUriIgnorePattern(".*\\.(ico|png|gif|jpg|css|js)$");
 
