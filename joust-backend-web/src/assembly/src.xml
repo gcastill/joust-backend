@@ -19,7 +19,7 @@
     </fileSet>
     <fileSet>
       <outputDirectory>etc</outputDirectory>
-      <directory>templates/etc</directory>
+      <directory>src/templates/etc</directory>
       <filtered>true</filtered>
     </fileSet>
   </fileSets>
