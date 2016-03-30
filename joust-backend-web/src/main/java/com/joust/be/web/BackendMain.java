@@ -8,6 +8,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.StandardRoot;
 
 import de.javakaffee.web.msm.MemcachedBackupSessionManager;
+import de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory;
 
 public class BackendMain {
 
@@ -45,6 +46,8 @@ public class BackendMain {
     sessionManager.setPassword(memcachedPassword);
     sessionManager.setSticky(true);
     sessionManager.setLockingMode("auto");
+    sessionManager.setMemcachedProtocol("binary");
+    sessionManager.setTranscoderFactoryClass(KryoTranscoderFactory.class.getName());
     sessionManager.setRequestUriIgnorePattern(".*\\.(ico|png|gif|jpg|css|js)$");
 
     ctx.setManager(sessionManager);
