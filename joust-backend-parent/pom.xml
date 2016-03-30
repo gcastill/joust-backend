@@ -173,51 +173,6 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <version>2.2.1</version>
-        <executions>
-          <execution>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>revision</goal>
-            </goals>
-          </execution>
-        </executions>
-
-        <configuration>
-          <dateFormat>yyyy.MM.dd-HHmmss</dateFormat>
-          <dateFormatTimeZone>America/Chicago</dateFormatTimeZone>
-          <verbose>false</verbose>
-          <generateGitPropertiesFile>true</generateGitPropertiesFile>
-          <generateGitPropertiesFilename>${project.build.directory}/git.properties</generateGitPropertiesFilename>
-          <format>properties</format>
-          <skipPoms>true</skipPoms>
-          <injectAllReactorProjects>true</injectAllReactorProjects>
-          <failOnNoGitDirectory>true</failOnNoGitDirectory>
-          <failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
-          <runOnlyOnce>false</runOnlyOnce>
-          <useNativeGit>false</useNativeGit>
-          <includeOnlyProperties>
-            <includeOnlyProperty>git.branch</includeOnlyProperty>
-            <includeOnlyProperty>git.build.time</includeOnlyProperty>
-            <includeOnlyProperty>git.build.version</includeOnlyProperty>
-            <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
-          </includeOnlyProperties>
-          <abbrevLength>7</abbrevLength>
-          <commitIdGenerationMode>flat</commitIdGenerationMode>
-          <gitDescribe>
-            <skip>false</skip>
-            <always>true</always>
-            <abbrev>7</abbrev>
-            <dirty>-dirty</dirty>
-            <match>*</match>
-            <forceLongFormat>false</forceLongFormat>
-          </gitDescribe>
-        </configuration>
-
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
@@ -237,4 +192,3 @@
   </build>
 
 </project>
-
