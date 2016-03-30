@@ -5,41 +5,56 @@ import java.io.File;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
+
+import de.javakaffee.web.msm.MemcachedBackupSessionManager;
+import de.javakaffee.web.msm.MemcachedSessionService;
 
 public class BackendMain {
 
-	public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
 
-		Tomcat tomcat = new Tomcat();
-		tomcat.setBaseDir("target");
+    Tomcat tomcat = new Tomcat();
+    tomcat.setBaseDir("target");
 
-		String webPort = System.getenv("PORT");
-		if (webPort == null || webPort.isEmpty()) {
-			webPort = "8080";
-		}
+    String webPort = System.getenv("PORT");
+    if (webPort == null || webPort.isEmpty()) {
+      webPort = "8080";
+    }
 
-		File baseDir = new File(System.getProperty("project.basedir", "joust-backend-web"));
+    File baseDir = new File(System.getProperty("project.basedir", "joust-backend-web"));
 
-		tomcat.setPort(Integer.valueOf(webPort));
+    tomcat.setPort(Integer.valueOf(webPort));
 
-		File webapp = new File(baseDir, "src/main/webapp/");
-		StandardContext ctx = (StandardContext) tomcat.addWebapp("", webapp.getAbsolutePath());
+    File webapp = new File(baseDir, "src/main/webapp/");
+    StandardContext ctx = (StandardContext) tomcat.addWebapp("", webapp.getAbsolutePath());
 
-		// Declare an alternative location for your "WEB-INF/classes" dir
-		// Servlet 3.0 annotation will work
-		File classes = new File(baseDir, "target/classes");
-		WebResourceRoot resources = new StandardRoot(ctx);
+    // Declare an alternative location for your "WEB-INF/classes" dir
+    // Servlet 3.0 annotation will work
 
-		resources.addPreResources(new DirResourceSet(resources, "/WEB-INF/classes", classes.getAbsolutePath(), "/"));
-		ctx.setResources(resources);
+    WebResourceRoot resources = new StandardRoot(ctx);
 
-		// Define and bind web.xml file location.
-		File configFile = new File(webapp, "WEB-INF/web.xml");
-		ctx.setConfigFile(configFile.toURI().toURL());
+    ctx.setResources(resources);
 
-		tomcat.start();
-		tomcat.getServer().await();
-	}
+    String memcachedServers = System.getenv("MEMCACHEDCLOUD_SERVERS");
+    String memcachedUsername = System.getenv("MEMCACHEDCLOUD_USERNAME");
+    String memcachedPassword = System.getenv("MEMCACHEDCLOUD_PASSWORD");
+
+    MemcachedBackupSessionManager sessionManager = new MemcachedBackupSessionManager();
+    sessionManager.setMemcachedNodes(memcachedServers);
+    sessionManager.setUsername(memcachedUsername);
+    sessionManager.setPassword(memcachedPassword);
+    sessionManager.setSticky(false);
+    sessionManager.setLockingMode("auto");
+    sessionManager.setRequestUriIgnorePattern(".*\\.(ico|png|gif|jpg|css|js)$");
+
+    ctx.setManager(sessionManager);
+
+    // Define and bind web.xml file location.
+    File configFile = new File(webapp, "WEB-INF/web.xml");
+    ctx.setConfigFile(configFile.toURI().toURL());
+
+    tomcat.start();
+    tomcat.getServer().await();
+  }
 }
