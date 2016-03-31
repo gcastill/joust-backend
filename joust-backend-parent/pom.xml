@@ -6,7 +6,7 @@
 
   <groupId>com.joust.backend</groupId>
   <artifactId>joust-backend-parent</artifactId>
-  <version>develop-SNAPSHOT</version>
+  <version>master-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
