@@ -6,7 +6,7 @@
 
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:beans-web.xml</param-value>
+    <param-value>classpath:beans-web.xml classpath:beans-security.xml</param-value>
   </context-param>
 
   <listener>
@@ -34,9 +34,23 @@
     <load-on-startup>2</load-on-startup>
   </servlet>
 
+
+  <!--Hook into spring security -->
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+
   <servlet-mapping>
     <servlet-name>jersey-servlet</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
+
+
+
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
 </web-app>
