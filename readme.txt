@@ -1,3 +1,7 @@
+Local
+=====
+Heroku can be used to run this application locally. However, Google login may not work when run locally.
+
 To build:
 
 - mvn clean install
@@ -13,4 +17,9 @@ To run:
 
 - heroku local
 
+
+Remote - Heroku
+===============
+This application is also hosted on Heroku. It can be accessed at the following URL:
+https://joust-backend.herokuapp.com/
 
