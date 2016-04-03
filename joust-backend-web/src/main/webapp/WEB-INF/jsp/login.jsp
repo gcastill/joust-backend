@@ -49,17 +49,24 @@
 
 			var idToken = googleUser.getAuthResponse().id_token;
 
-			$.post("<%=request.getContextPath()%>/rest/google/verifyLogin", idToken);
+			$.ajax({
+				url : "${base}/rest/users/google",
+				headers : {
+					//all you need is the access token when making authenticated/authorized requests.
+					'Authorization' : 'Bearer ' + window.token.access_token,
+				},
+				method : 'POST',
 
-			// Useful data for your client-side scripts:
-			var profile = googleUser.getBasicProfile();
-
-			$("#login").hide();
-			$('#img').attr("src", profile.getImageUrl());
-			$('#given-name').text(profile.getGivenName());
-			$('#family-name').text(profile.getFamilyName());
-			$('#email').text(profile.getEmail());
-			$('#info').show();
+				data : idToken,
+				success : function(user) {
+					$("#login").hide();
+					$('#img').attr("src", user.profileUrl);
+					$('#given-name').text(user.givenName);
+					$('#family-name').text(user.familyName);
+					$('#email').text(user.email);
+					$('#info').show();
+				}
+			});
 
 		};
 	</script>
@@ -72,6 +79,17 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+
+			//TODO: This is a hack to get an access token. This functionality should be done server side on node js.
+			$.post("${base}/oauth/token", {
+				"client_id" : "nodejs",
+				"grant_type" : "client_credentials",
+				"scope" : "read",
+				"secret" : "nodejs"
+			}, function(data) {
+				window.token = data;
+			});
+
 			$("#logout").click(function() {
 				gapi.auth2.getAuthInstance().signOut();
 				$("#login").show();

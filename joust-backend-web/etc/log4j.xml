@@ -16,6 +16,11 @@
     <appender-ref ref="console" />
   </logger>
 
+  <logger name="org.springframework.security" additivity="false">
+    <level value="debug" />
+    <appender-ref ref="console" />
+  </logger>
+
 
   <root>
     <priority value="info" />
