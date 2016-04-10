@@ -1,4 +1,4 @@
-package com.joust.be.model.domain;
+package com.joust.backend.model.domain;
 
 import java.net.URL;
 import java.util.Locale;

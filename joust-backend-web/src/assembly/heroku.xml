@@ -18,9 +18,19 @@
       <directory>etc</directory>
     </fileSet>
     <fileSet>
+      <outputDirectory>bin</outputDirectory>
+      <directory>bin</directory>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0755</fileMode>
+    </fileSet>
+    <fileSet>
       <outputDirectory>etc</outputDirectory>
       <directory>src/templates/etc</directory>
       <filtered>true</filtered>
+    </fileSet>
+    <fileSet>
+      <outputDirectory>webapp</outputDirectory>
+      <directory>src/main/webapp</directory>
     </fileSet>
   </fileSets>
 </assembly>

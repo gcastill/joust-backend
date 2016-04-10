@@ -1,4 +1,4 @@
-package com.joust.be.web;
+package com.joust.backend.web;
 
 import java.io.File;
 
@@ -10,7 +10,7 @@ import org.apache.catalina.webresources.StandardRoot;
 import de.javakaffee.web.msm.MemcachedBackupSessionManager;
 import de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory;
 
-public class BackendMain {
+public class AppMain {
 
   public static void main(String[] args) throws Exception {
 
@@ -26,7 +26,7 @@ public class BackendMain {
 
     tomcat.setPort(Integer.valueOf(webPort));
 
-    File webapp = new File(baseDir, "src/main/webapp/");
+    File webapp = new File(baseDir, "webapp");
     StandardContext ctx = (StandardContext) tomcat.addWebapp("", webapp.getAbsolutePath());
 
     // Declare an alternative location for your "WEB-INF/classes" dir

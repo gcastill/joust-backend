@@ -1,1 +1,0 @@
-web: java  -cp joust-backend-web\target\joust\etc;joust-backend-web\target\joust\lib\* com.joust.be.web.BackendMain

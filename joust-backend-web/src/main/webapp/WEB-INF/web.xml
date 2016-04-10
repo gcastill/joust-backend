@@ -21,8 +21,12 @@
     <servlet-name>mvc</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
+      <param-name>contextClass</param-name>
+      <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </init-param>
+    <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:beans-mvc-servlet.xml</param-value>
+      <param-value>com.joust.backend.web.mvc.MvcConfiguration</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -32,16 +36,11 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
-
-
   <!--Hook into spring security -->
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
   </filter>
-
-
-
 
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>

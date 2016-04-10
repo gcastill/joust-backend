@@ -1,4 +1,4 @@
-package com.joust.be.model.domain;
+package com.joust.backend.model.domain;
 
 public class Heartbeat {
 

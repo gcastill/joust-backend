@@ -1,24 +1,23 @@
-package com.joust.be.web.controller.rest.heartbeat;
+package com.joust.backend.web.mvc.controller.rest.heartbeat;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.joust.be.model.domain.Heartbeat;
+import com.joust.backend.model.domain.Heartbeat;
 
-@Component
+@Controller
 @RequestMapping("/rest/heartbeat")
 public class HeartbeatController {
 
-  @Resource
+  @Value("${build.version}")
   private String buildVersion;
 
-  @Resource
+  @Value("${build.label}")
   private String buildLabel;
 
   @RequestMapping(method = GET)

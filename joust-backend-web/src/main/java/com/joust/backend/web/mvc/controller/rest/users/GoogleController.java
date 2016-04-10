@@ -1,4 +1,4 @@
-package com.joust.be.web.controller.rest.users;
+package com.joust.backend.web.mvc.controller.rest.users;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -19,8 +19,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.joust.be.model.domain.User;
-import com.joust.be.model.domain.User.UserSource;
+import com.joust.backend.model.domain.User;
+import com.joust.backend.model.domain.User.UserSource;
 
 @Controller
 @RequestMapping("/rest/users/google")
