@@ -36,7 +36,6 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
     UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
     viewResolver.setViewClass(JstlView.class);
     viewResolver.setPrefix("/WEB-INF/jsp/");
-    viewResolver.setSuffix(".jsp");
     return viewResolver;
   }
 
