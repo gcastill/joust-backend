@@ -1,4 +1,4 @@
-package com.joust.backend.web.mvc.controller.rest.users;
+package com.joust.backend.web.mvc.controller.oauth.google;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -23,7 +23,7 @@ import com.joust.backend.model.domain.User;
 import com.joust.backend.model.domain.User.UserSource;
 
 @Controller
-@RequestMapping("/rest/users/google")
+@RequestMapping("/oath/google")
 public class GoogleController {
 
   @Resource

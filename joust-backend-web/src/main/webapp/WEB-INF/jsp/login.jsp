@@ -50,7 +50,7 @@
 			var idToken = googleUser.getAuthResponse().id_token;
 
 			$.ajax({
-				url : "${base}/rest/users/google",
+				url : "${base}/oauth/google",
 				headers : {
 					//all you need is the access token when making authenticated/authorized requests.
 					'Authorization' : 'Bearer ' + window.token.access_token,
