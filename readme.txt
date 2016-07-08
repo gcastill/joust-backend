@@ -21,5 +21,5 @@ To run:
 Remote - Heroku
 ===============
 This application is also hosted on Heroku. It can be accessed at the following URL:
-https://joust-backend.herokuapp.com/
+https://joust-backend.herokuapp.com/login
 
