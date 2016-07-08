@@ -24,7 +24,7 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
 
   @Override
   protected void addViewControllers(ViewControllerRegistry registry) {
-    registry.addViewController("/login.jsp").setViewName("login");
+    registry.addViewController("/login").setViewName("login");
   }
 
   @Override
@@ -37,6 +37,7 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
     UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
     viewResolver.setViewClass(JstlView.class);
     viewResolver.setPrefix("/WEB-INF/jsp/");
+    viewResolver.setSuffix(".jsp");
     return viewResolver;
   }
 
