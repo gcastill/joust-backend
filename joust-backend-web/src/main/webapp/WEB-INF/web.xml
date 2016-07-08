@@ -10,8 +10,9 @@
   </context-param>
 
   <welcome-file-list>
-  <welcome-file>login.jsp</welcome-file>
+  <welcome-file>login</welcome-file>
   </welcome-file-list>
+  
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>

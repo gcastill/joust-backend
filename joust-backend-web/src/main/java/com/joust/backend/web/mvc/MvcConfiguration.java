@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
@@ -24,7 +25,7 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
 
   @Override
   protected void addViewControllers(ViewControllerRegistry registry) {
-    registry.addViewController("/login").setViewName("login");
+    registry.addViewController("/login.jsp").setViewName("login");
   }
 
   @Override
@@ -34,8 +35,7 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
 
   @Bean
   public ViewResolver getUrlBasedViewResolver() {
-    UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
-    viewResolver.setViewClass(JstlView.class);
+    UrlBasedViewResolver viewResolver = new InternalResourceViewResolver();
     viewResolver.setPrefix("/WEB-INF/jsp/");
     viewResolver.setSuffix(".jsp");
     return viewResolver;
