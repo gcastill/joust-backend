@@ -17,13 +17,14 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+
 @Configuration
 @ComponentScan(basePackages = "com.joust.backend.web.mvc")
 public class MvcConfiguration extends WebMvcConfigurationSupport {
 
   @Override
   protected void addViewControllers(ViewControllerRegistry registry) {
-    registry.addViewController("/login.jsp").setViewName("login.jsp");
+    registry.addViewController("/login.jsp").setViewName("login");
   }
 
   @Override
