@@ -25,7 +25,7 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
 
   @Override
   protected void addViewControllers(ViewControllerRegistry registry) {
-    registry.addViewController("/login.jsp").setViewName("login");
+    registry.addViewController("/login").setViewName("login");
   }
 
   @Override
