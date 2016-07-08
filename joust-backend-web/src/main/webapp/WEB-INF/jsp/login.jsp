@@ -51,10 +51,10 @@
 
 			$.ajax({
 				url : "${base}/oauth/google",
-				headers : {
+		//		headers : {
 					//all you need is the access token when making authenticated/authorized requests.
-					'Authorization' : 'Bearer ' + window.token.access_token,
-				},
+			//		'Authorization' : 'Bearer ' + window.token.access_token,
+				//},
 				method : 'POST',
 
 				data : idToken,
