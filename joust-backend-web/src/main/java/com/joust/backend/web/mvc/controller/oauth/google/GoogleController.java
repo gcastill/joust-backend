@@ -23,7 +23,7 @@ import com.joust.backend.model.domain.User;
 import com.joust.backend.model.domain.User.UserSource;
 
 @Controller
-@RequestMapping("/oath/google")
+@RequestMapping("/oauth/google")
 public class GoogleController {
 
   @Resource
