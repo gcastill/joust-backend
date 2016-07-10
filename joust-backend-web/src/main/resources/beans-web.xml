@@ -17,7 +17,11 @@
     <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }" />
   </bean>
 
-  <bean id='flyway' class="org.flywaydb.core.Flyway" init-method="migrate">
+  <bean id='flyway.clean' class="org.flywaydb.core.Flyway" init-method="clean">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+
+  <bean id='flyway.migrate' class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="flyway.clean">
     <property name="dataSource" ref="dataSource" />
   </bean>
 

@@ -4,9 +4,9 @@ create table users(
 	enabled boolean not null
 );
 
-create table authorities (
+create table user_authorities (
 	username varchar(50) not null,
 	authority varchar(50) not null,
 	constraint fk_authorities_users foreign key(username) references users(username)
 );
-create unique index ix_auth_username on authorities (username,authority);
+create unique index ix_auth_username on user_authorities (username,authority);
