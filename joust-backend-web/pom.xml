@@ -12,9 +12,13 @@
 
   <artifactId>joust-backend-web</artifactId>
 
-
-
   <dependencies>
+
+    <dependency>
+      <groupId>com.joust.backend</groupId>
+      <artifactId>joust-backend-db-deployer</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Spring security -->
     <dependency>

@@ -10,6 +10,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>../joust-backend-db-deployer/</module>
     <module>../joust-backend-web/</module>
   </modules>
 

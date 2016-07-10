@@ -51,13 +51,15 @@
 
 			$.ajax({
 				url : "${base}/oauth/google",
-		//		headers : {
-					//all you need is the access token when making authenticated/authorized requests.
-			//		'Authorization' : 'Bearer ' + window.token.access_token,
-				//},
+				headers : {
+					'Authorization' : 'Basic ' + btoa("nodejs:nodejs"),
+					'x-google-token' : idToken
+				},
 				method : 'POST',
-
-				data : idToken,
+				data : {
+					"grant_type" : "client_credentials",
+					"scope" : "read"
+				},
 				success : function(user) {
 					$("#login").hide();
 					$('#img').attr("src", user.profileUrl);
@@ -79,16 +81,6 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-
-			//TODO: This is a hack to get an access token. This functionality should be done server side on node js.
-			$.post("${base}/oauth/token", {
-				"client_id" : "nodejs",
-				"grant_type" : "client_credentials",
-				"scope" : "read",
-				"secret" : "nodejs"
-			}, function(data) {
-				window.token = data;
-			});
 
 			$("#logout").click(function() {
 				gapi.auth2.getAuthInstance().signOut();
