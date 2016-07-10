@@ -76,12 +76,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     <security:authentication-provider user-service-ref="clientDetailsUserService" />
   </security:authentication-manager>
 
-  <security:user-service id="userDetailsService">
-    <security:user name="gustavo" password="gustavo" authorities="ROLE_USER,ROLE_MODERATOR,ROLE_ADMIN" />
-    <security:user name="mike" password="will?" authorities="ROLE_USER,ROLE_MODERATOR" />
-    <security:user name="tom" password="tom" authorities="ROLE_USER" />
-  </security:user-service>
-
+  <security:jdbc-user-service id="userDetailsService" data-source-ref="dataSource" />
 
   <security:authentication-manager alias="authenticationManager">
     <security:authentication-provider user-service-ref="userDetailsService" />
@@ -94,7 +89,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
   <!-- Used for the persistenceof tokens (currently an in memory implementation) -->
   <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore" />
 
-  <!-- Used to create token and and every thing about them except for their persistence that is reposibility of TokenStore 
+  <!-- Used to create token and and every thing about them except for their persistence that is responsibility of TokenStore 
     (Given here is a default implementation) -->
   <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
     <property name="tokenStore" ref="tokenStore" />

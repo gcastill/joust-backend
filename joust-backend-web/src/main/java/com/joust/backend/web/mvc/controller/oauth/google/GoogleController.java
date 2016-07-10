@@ -28,7 +28,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,7 +62,7 @@ public class GoogleController {
 	private DefaultTokenServices tokenServices;
 
 	@Resource
-	InMemoryUserDetailsManager userDetailsService;
+	UserDetailsManager userDetailsService;
 
 	private JoustUser verifyGoogleLogin(String idToken) throws IOException, GeneralSecurityException {
 		// TODO: clean this mess up. This should be in a service. There
