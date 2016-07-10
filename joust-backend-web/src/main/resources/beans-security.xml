@@ -122,17 +122,12 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 
   <oauth:resource-server id="resourceServerFilter" resource-id="test" token-services-ref="tokenServices" />
   <!-- ClientsDeailsService: Entry Point to clients database (given is in memory implementation) -->
-  <oauth:client-details-service id="clientDetails">
 
-    <!-- to be used by nodejs -->
-    <oauth:client client-id="nodejs" secret="nodejs" authorities="ROLE_CLIENT" scope="read,write,administer"
-      authorized-grant-types="password,refresh_token,client_credentials" />
 
-    <!-- this is for POC code that is bundled with the service. -->
-    <oauth:client client-id="web-mvc" secret="web-mvc" authorities="ROLE_CLIENT" scope="read,write,administer"
-      authorized-grant-types="password,refresh_token,client_credentials" />
 
-  </oauth:client-details-service>
+  <bean id="clientDetails" class="org.springframework.security.oauth2.provider.client.JdbcClientDetailsService">
+    <constructor-arg ref="dataSource" />
+  </bean>
 
   <oauth:expression-handler id="oauthExpressionHandler" />
 
