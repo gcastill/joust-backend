@@ -1,12 +1,21 @@
 package com.joust.backend.data.spring;
 
+import static com.joust.backend.data.spring.ExternalProfileSourceColumns.REFERENCE_ID;
+import static com.joust.backend.data.spring.ExternalProfileSourceColumns.SOURCE;
+import static com.joust.backend.data.spring.UserProfileColumns.EMAIL;
+import static com.joust.backend.data.spring.UserProfileColumns.FAMILY_NAME;
+import static com.joust.backend.data.spring.UserProfileColumns.GIVEN_NAME;
+import static com.joust.backend.data.spring.UserProfileColumns.LOCALE;
+import static com.joust.backend.data.spring.UserProfileColumns.PROFILE_URL;
+import static com.joust.backend.data.spring.UserProfileColumns.USER_PROFILE_ID;
+
+import java.sql.Types;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.joust.backend.core.data.UserProfileStore;
@@ -30,7 +39,7 @@ public final class JdbcUserProfileStore implements UserProfileStore {
 
 	@Override
 	public UserProfile getUserProfile(String id) {
-		return jdbcTemplate.queryForObject(getUserProfileSql, Collections.singletonMap("ID", id), rowMapper);
+		return jdbcTemplate.queryForObject(getUserProfileSql, Collections.singletonMap(USER_PROFILE_ID, id), rowMapper);
 	}
 
 	@Override
@@ -41,10 +50,9 @@ public final class JdbcUserProfileStore implements UserProfileStore {
 
 	@Override
 	public UserProfile getUserProfileByExternalSource(Source source, String referenceId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("SOURCE", source);
-		map.put("REFERENCE_ID", referenceId);
-		return jdbcTemplate.queryForObject(getUserProfileByExternalSourceSql, map, rowMapper);
+		MapSqlParameterSource map = new MapSqlParameterSource();
+		map.addValue(SOURCE, source, Types.VARCHAR).addValue(REFERENCE_ID, referenceId);
+		return jdbcTemplate.query(getUserProfileByExternalSourceSql, map, rowMapper).stream().findFirst().orElse(null);
 	}
 
 	@Override
@@ -52,18 +60,17 @@ public final class JdbcUserProfileStore implements UserProfileStore {
 		jdbcTemplate.update(saveExternalProfileSourceSql, createParameterMap(externalProfileSource));
 	}
 
-	Map<String, Object> createParameterMap(UserProfile profile) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("ID", profile.getId().toString());
-		return map;
+	MapSqlParameterSource createParameterMap(UserProfile profile) {
+		return new MapSqlParameterSource().addValue(USER_PROFILE_ID, profile.getId())
+				.addValue(EMAIL, profile.getEmail()).addValue(GIVEN_NAME, profile.getGivenName())
+				.addValue(FAMILY_NAME, profile.getFamilyName()).addValue(LOCALE, profile.getLocale(), Types.VARCHAR)
+				.addValue(PROFILE_URL, profile.getProfileUrl(), Types.VARCHAR);
 	}
 
-	private Map<String, Object> createParameterMap(ExternalProfileSource externalProfileSource) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("SOURCE", externalProfileSource.getSource());
-		map.put("REFERENCE_ID", externalProfileSource.getReferenceId());
-		map.put("USER_PROFILE_ID", externalProfileSource.getUserProfileId());
-		return map;
+	private MapSqlParameterSource createParameterMap(ExternalProfileSource externalProfileSource) {
+		return new MapSqlParameterSource().addValue(SOURCE, externalProfileSource.getSource(), Types.VARCHAR)
+				.addValue(REFERENCE_ID, externalProfileSource.getReferenceId())
+				.addValue(USER_PROFILE_ID, externalProfileSource.getUserProfileId());
 	}
 
 	public NamedParameterJdbcTemplate getJdbcTemplate() {
