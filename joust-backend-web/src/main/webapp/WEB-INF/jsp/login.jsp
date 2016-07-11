@@ -60,12 +60,13 @@
 					"grant_type" : "client_credentials",
 					"scope" : "read"
 				},
-				success : function(user) {
+				success : function(data) {
+					var profile = data.profile;
 					$("#login").hide();
-					$('#img').attr("src", user.profileUrl);
-					$('#given-name').text(user.givenName);
-					$('#family-name').text(user.familyName);
-					$('#email').text(user.email);
+					$('#img').attr("src", profile.profileUrl);
+					$('#given-name').text(profile.givenName);
+					$('#family-name').text(profile.familyName);
+					$('#email').text(profile.email);
 					$('#info').show();
 				}
 			});

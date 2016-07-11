@@ -8,6 +8,8 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -20,13 +22,20 @@ import javax.annotation.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Controller;
@@ -48,6 +57,9 @@ import com.joust.backend.core.model.UserProfile;
 @RequestMapping("/oauth/google")
 public class GoogleController {
 
+	private Set<GrantedAuthority> DEFAULT_USER_AUTHORITIES = Collections
+			.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+
 	@Resource
 	private String googleClientId;
 
@@ -68,6 +80,12 @@ public class GoogleController {
 
 	@Resource
 	private UserProfileStore userProfileStore;
+
+	@Resource
+	private ClientDetailsService clientDetailsService;
+
+	@Resource
+	private OAuth2RequestFactory oauth2RequestFactory;
 
 	private UserProfile verifyGoogleLogin(String idToken) throws IOException, GeneralSecurityException {
 		// TODO: clean this mess up. This should be in a service. There
@@ -131,45 +149,78 @@ public class GoogleController {
 	}
 
 	@RequestMapping(method = POST, headers = "x-google-token")
-	public ResponseEntity<OAuth2AccessToken> token(Principal principal,
+	public ResponseEntity<Map<String, Object>> token(Principal principal,
 			@RequestHeader("x-google-token") String googleToken, @RequestParam Map<String, String> parameters)
 			throws IOException, GeneralSecurityException {
 
+		if (!(principal instanceof Authentication)) {
+			throw new InsufficientAuthenticationException(
+					"There is no client authentication. Try adding an appropriate authentication filter.");
+		}
+
+		String clientId = getClientId(principal);
+		ClientDetails authenticatedClient = clientDetailsService.loadClientByClientId(clientId);
+
+		TokenRequest tokenRequest = oauth2RequestFactory.createTokenRequest(parameters, authenticatedClient);
+
 		UserProfile joustUser = verifyGoogleLogin(googleToken);
+		String username = joustUser.getId().toString();
 
-		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		Collection<GrantedAuthority> authorities = authenticatedClient.getAuthorities();
 
-		Map<String, String> requestParameters = new HashMap<>();
-		String clientId = principal.getName();
+		OAuth2Request oAuth2Request = oauth2RequestFactory.createOAuth2Request(authenticatedClient, tokenRequest);
 
-		boolean approved = true;
-		Set<String> scope = new HashSet<>();
-		scope.add("scope");
-		Set<String> resourceIds = new HashSet<>();
-		Set<String> responseTypes = new HashSet<>();
-		responseTypes.add("code");
-		Map<String, Serializable> extensionProperties = new HashMap<>();
+		UserDetails userPrincipal = null;
 
-		OAuth2Request oAuth2Request = new OAuth2Request(requestParameters, clientId, authorities, approved, scope,
-				resourceIds, null, responseTypes, extensionProperties);
+		if (!userDetailsService.userExists(username)) {
+			userPrincipal = new User(username, generatePlaceholderPassword(), true, true, true, true,
+					DEFAULT_USER_AUTHORITIES);
+			userDetailsService.createUser(userPrincipal);
 
-		User userPrincipal = new User(joustUser.getId().toString(), "", true, true, true, true, authorities);
+		} else {
+			userPrincipal = userDetailsService.loadUserByUsername(username);
 
-		userDetailsService.createUser(userPrincipal);
+		}
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userPrincipal,
 				null, authorities);
 		OAuth2Authentication auth = new OAuth2Authentication(oAuth2Request, authenticationToken);
+
 		OAuth2AccessToken token = tokenServices.createAccessToken(auth);
-		return getResponse(token);
+		return getResponse(joustUser, token);
 	}
 
-	private ResponseEntity<OAuth2AccessToken> getResponse(OAuth2AccessToken accessToken) {
+	private ResponseEntity<Map<String, Object>> getResponse(UserProfile profile, OAuth2AccessToken accessToken) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Cache-Control", "no-store");
 		headers.set("Pragma", "no-cache");
-		return new ResponseEntity<OAuth2AccessToken>(accessToken, headers, HttpStatus.OK);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("profile", profile);
+		result.put("token", accessToken);
+		return new ResponseEntity<>(result, headers, HttpStatus.OK);
+	}
+
+	public static String generatePlaceholderPassword() {
+		return UUID.randomUUID().toString();
+	}
+
+	/**
+	 * @param principal
+	 *            the currently authentication principal
+	 * @return a client id if there is one in the principal
+	 */
+	public static String getClientId(Principal principal) {
+		Authentication client = (Authentication) principal;
+		if (!client.isAuthenticated()) {
+			throw new InsufficientAuthenticationException("The client is not authenticated.");
+		}
+		String clientId = client.getName();
+		if (client instanceof OAuth2Authentication) {
+			// Might be a client and user combined authentication
+			clientId = ((OAuth2Authentication) client).getOAuth2Request().getClientId();
+		}
+		return clientId;
 	}
 
 }
