@@ -6,7 +6,7 @@
 
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:beans-web.xml classpath:beans-security.xml</param-value>
+    <param-value>classpath:beans-web.xml classpath:beans-security.xml classpath:beans-data.xml </param-value>
   </context-param>
 
   <welcome-file-list>

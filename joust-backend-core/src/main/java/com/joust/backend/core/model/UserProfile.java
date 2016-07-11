@@ -1,20 +1,12 @@
-package com.joust.backend.model.domain;
+package com.joust.backend.core.model;
 
 import java.net.URL;
 import java.util.Locale;
 import java.util.UUID;
 
-public class JoustUser {
+public class UserProfile {
 
-	public static enum UserSource {
-
-		GOOGLE, FACEBOOK, INTERNAL;
-
-	}
-
-	private UserSource source;
 	private UUID id;
-	private String referenceId;
 	private String email;
 	private String givenName;
 	private String familyName;
@@ -27,22 +19,6 @@ public class JoustUser {
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public UserSource getSource() {
-		return source;
-	}
-
-	public void setSource(UserSource userSource) {
-		this.source = userSource;
-	}
-
-	public String getReferenceId() {
-		return referenceId;
-	}
-
-	public void setReferenceId(String referenceId) {
-		this.referenceId = referenceId;
 	}
 
 	public String getEmail() {

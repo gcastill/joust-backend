@@ -10,8 +10,9 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>../joust-backend-db-deployer/</module>
-    <module>../joust-backend-web/</module>
+    <module>../joust-backend-core</module>
+    <module>../joust-backend-data</module>
+    <module>../joust-backend-web</module>
   </modules>
 
   <properties>
@@ -28,6 +29,24 @@
 
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>com.joust.backend</groupId>
+        <artifactId>joust-backend-data</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.joust.backend</groupId>
+        <artifactId>joust-backend-web</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.joust.backend</groupId>
+        <artifactId>joust-backend-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
@@ -99,7 +118,7 @@
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

@@ -39,8 +39,10 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.joust.backend.model.domain.JoustUser;
-import com.joust.backend.model.domain.JoustUser.UserSource;
+import com.joust.backend.core.data.UserProfileStore;
+import com.joust.backend.core.model.ExternalProfileSource;
+import com.joust.backend.core.model.ExternalProfileSource.Source;
+import com.joust.backend.core.model.UserProfile;
 
 @Controller
 @RequestMapping("/oauth/google")
@@ -62,9 +64,12 @@ public class GoogleController {
 	private DefaultTokenServices tokenServices;
 
 	@Resource
-	UserDetailsManager userDetailsService;
+	private UserDetailsManager userDetailsService;
 
-	private JoustUser verifyGoogleLogin(String idToken) throws IOException, GeneralSecurityException {
+	@Resource
+	private UserProfileStore userProfileStore;
+
+	private UserProfile verifyGoogleLogin(String idToken) throws IOException, GeneralSecurityException {
 		// TODO: clean this mess up. This should be in a service. There
 		// shouldn't be any business logic inside a controller.
 		// Also, System.out < proper logging.
@@ -77,11 +82,23 @@ public class GoogleController {
 		}
 		Payload payload = googleIdToken.getPayload();
 
-		JoustUser result = new JoustUser();
+		ExternalProfileSource profileSource = new ExternalProfileSource();
 
-		result.setSource(UserSource.GOOGLE);
-		result.setReferenceId(payload.getSubject());
-		result.setId(UUID.randomUUID());
+		profileSource.setSource(Source.GOOGLE);
+		profileSource.setReferenceId(payload.getSubject());
+
+		UserProfile result = userProfileStore.getUserProfileByExternalSource(profileSource.getSource(),
+				profileSource.getReferenceId());
+
+		boolean newUser = false;
+		if (result == null) {
+			result = new UserProfile();
+			result.setId(UUID.randomUUID());
+
+			profileSource.setUserProfileId(result.getId());
+			newUser = true;
+
+		}
 
 		if (!payload.getEmailVerified()) {
 			// TODO: throw an exception? that seems like the cheapest way to
@@ -102,23 +119,23 @@ public class GoogleController {
 		result.setFamilyName((String) payload.get("family_name"));
 		result.setGivenName((String) payload.get("given_name"));
 
-		// TODO: this is a good place to perform some sort of merge logic.
-		// do we
-		// refresh the user's data from google each time? should we never
-		// update
-		// this information and allow the user to update it themselves in
-		// our own
-		// UI? Questions, so many questions...
+		// We merge user data from google each time.
+		userProfileStore.mergeUserProfile(result);
+
+		if (newUser) {
+			userProfileStore.saveExternalProfileSource(profileSource);
+		}
 
 		return result;
 
 	}
 
 	@RequestMapping(method = POST, headers = "x-google-token")
-	public ResponseEntity<OAuth2AccessToken> token(Principal principal, @RequestHeader("x-google-token") String googleToken,
-			@RequestParam Map<String, String> parameters) throws IOException, GeneralSecurityException {
+	public ResponseEntity<OAuth2AccessToken> token(Principal principal,
+			@RequestHeader("x-google-token") String googleToken, @RequestParam Map<String, String> parameters)
+			throws IOException, GeneralSecurityException {
 
-		JoustUser joustUser = verifyGoogleLogin(googleToken);
+		UserProfile joustUser = verifyGoogleLogin(googleToken);
 
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));

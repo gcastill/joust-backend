@@ -10,13 +10,36 @@
     <relativePath>../joust-backend-parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>joust-backend-db-deployer</artifactId>
+  <artifactId>joust-backend-data</artifactId>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.joust.backend</groupId>
+      <artifactId>joust-backend-core</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
       <version>4.0.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.4.1208</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mchange</groupId>
+      <artifactId>c3p0</artifactId>
+      <version>0.9.5.2</version>
     </dependency>
 
   </dependencies>
