@@ -52,7 +52,7 @@
 			$.ajax({
 				url : "${base}/oauth/google",
 				headers : {
-					'Authorization' : 'Basic ' + btoa("web-mvc:web-mvc"),
+					'Authorization' : 'Basic ' + btoa("nodejs:nodejs"),
 					'x-google-token' : idToken
 				},
 				method : 'POST',
