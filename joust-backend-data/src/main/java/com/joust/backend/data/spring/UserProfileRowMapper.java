@@ -33,12 +33,12 @@ public class UserProfileRowMapper implements RowMapper<UserProfile> {
 		builder.familyName(rs.getString(FAMILY_NAME));
 		String profileUrlString = rs.getString(PROFILE_URL);
 		try {
-			builder.profileUrl(profileUrlString == null ? new URL(profileUrlString) : null);
+			builder.profileUrl(profileUrlString != null ? new URL(profileUrlString) : null);
 		} catch (MalformedURLException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		String localeString = rs.getString(LOCALE);
-		builder.locale(localeString == null ? Locale.forLanguageTag(localeString) : null);
+		builder.locale(localeString != null ? Locale.forLanguageTag(localeString) : null);
 
 		return builder.build();
 	}

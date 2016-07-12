@@ -123,7 +123,7 @@ public class GoogleController {
           .userProfileId(updated.getId()).build());
     }
 
-    return fromDatabase;
+    return updated;
 
   }
 
