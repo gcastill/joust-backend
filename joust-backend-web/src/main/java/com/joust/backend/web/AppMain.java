@@ -1,6 +1,7 @@
 package com.joust.backend.web;
 
 import java.io.File;
+import java.util.Map;
 
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.core.StandardContext;
@@ -9,18 +10,19 @@ import org.apache.catalina.webresources.StandardRoot;
 
 import de.javakaffee.web.msm.MemcachedBackupSessionManager;
 import de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AppMain {
 
   public static void main(String[] args) throws Exception {
 
+    Map<String, String> env = System.getenv();
+
     Tomcat tomcat = new Tomcat();
     tomcat.setBaseDir("target");
 
-    String webPort = System.getenv("PORT");
-    if (webPort == null || webPort.isEmpty()) {
-      webPort = "8080";
-    }
+    String webPort = env.getOrDefault("PORT", "8080");
 
     File baseDir = new File(System.getProperty("project.basedir", "joust-backend-web"));
 
@@ -36,21 +38,31 @@ public class AppMain {
 
     ctx.setResources(resources);
 
-    String memcachedServers = System.getenv("MEMCACHEDCLOUD_SERVERS");
-    String memcachedUsername = System.getenv("MEMCACHEDCLOUD_USERNAME");
-    String memcachedPassword = System.getenv("MEMCACHEDCLOUD_PASSWORD");
+    // The nature of this application does not require session management, much
+    // less distributed session management. I'll leave this here in case someone
+    // needs an example of how to do it but turning it off by default.
 
-    MemcachedBackupSessionManager sessionManager = new MemcachedBackupSessionManager();
-    sessionManager.setMemcachedNodes(memcachedServers);
-    sessionManager.setUsername(memcachedUsername);
-    sessionManager.setPassword(memcachedPassword);
-    sessionManager.setSticky(true);
-    sessionManager.setLockingMode("auto");
-    sessionManager.setMemcachedProtocol("binary");
-    sessionManager.setTranscoderFactoryClass(KryoTranscoderFactory.class.getName());
-    sessionManager.setRequestUriIgnorePattern(".*\\.(ico|png|gif|jpg|css|js)$");
+    boolean distributedSessions = Boolean.parseBoolean(System.getenv().getOrDefault("DISTRIBUTED_SESSIONS", "false"));
+    log.info("distributedSessions={}", distributedSessions);
 
-    ctx.setManager(sessionManager);
+    if (distributedSessions) {
+
+      String memcachedServers = env.get("MEMCACHEDCLOUD_SERVERS");
+      String memcachedUsername = env.get("MEMCACHEDCLOUD_USERNAME");
+      String memcachedPassword = env.get("MEMCACHEDCLOUD_PASSWORD");
+
+      MemcachedBackupSessionManager sessionManager = new MemcachedBackupSessionManager();
+      sessionManager.setMemcachedNodes(memcachedServers);
+      sessionManager.setUsername(memcachedUsername);
+      sessionManager.setPassword(memcachedPassword);
+      sessionManager.setSticky(true);
+      sessionManager.setLockingMode("auto");
+      sessionManager.setMemcachedProtocol("binary");
+      sessionManager.setTranscoderFactoryClass(KryoTranscoderFactory.class.getName());
+      sessionManager.setRequestUriIgnorePattern(".*\\.(ico|png|gif|jpg|css|js)$");
+
+      ctx.setManager(sessionManager);
+    }
 
     // Define and bind web.xml file location.
     File configFile = new File(webapp, "WEB-INF/web.xml");

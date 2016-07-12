@@ -17,26 +17,30 @@ import java.util.UUID;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.joust.backend.core.model.UserProfile;
+import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
 
 public class UserProfileRowMapper implements RowMapper<UserProfile> {
 
 	@Override
 	public UserProfile mapRow(ResultSet rs, int rowNum) throws SQLException {
-		UserProfile result = new UserProfile();
-		result.setId(UUID.fromString(rs.getString(USER_PROFILE_ID)));
-		result.setEmail(rs.getString(EMAIL));
-		result.setGivenName(rs.getString(GIVEN_NAME));
-		result.setFamilyName(rs.getString(FAMILY_NAME));
+
+		UserProfileBuilder builder = UserProfile.builder();
+
+		builder.id(UUID.fromString(rs.getString(USER_PROFILE_ID)));
+
+		builder.email(rs.getString(EMAIL));
+		builder.givenName(rs.getString(GIVEN_NAME));
+		builder.familyName(rs.getString(FAMILY_NAME));
 		String profileUrlString = rs.getString(PROFILE_URL);
 		try {
-			result.setProfileUrl(profileUrlString == null ? new URL(profileUrlString) : null);
+			builder.profileUrl(profileUrlString == null ? new URL(profileUrlString) : null);
 		} catch (MalformedURLException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		String localeString = rs.getString(LOCALE);
-		result.setLocale(localeString == null ? Locale.forLanguageTag(localeString) : null);
+		builder.locale(localeString == null ? Locale.forLanguageTag(localeString) : null);
 
-		return result;
+		return builder.build();
 	}
 
 }

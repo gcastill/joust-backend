@@ -41,134 +41,130 @@ import com.joust.backend.core.data.UserProfileStore;
 import com.joust.backend.core.model.ExternalProfileSource;
 import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
+import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
+
+import lombok.Data;
 
 @Controller
 @RequestMapping("/oauth/google")
+@Data
 public class GoogleController {
 
-	private static Set<GrantedAuthority> DEFAULT_USER_AUTHORITIES = Collections
-			.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+  private static Set<GrantedAuthority> DEFAULT_USER_AUTHORITIES = Collections
+      .singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
-	@Resource
-	private String googleClientId;
+  @Resource
+  private String googleClientId;
 
-	@Resource
-	private JsonFactory googleJsonFactory;
+  @Resource
+  private JsonFactory googleJsonFactory;
 
-	@Resource
-	private HttpTransport googleHttpTransport;
+  @Resource
+  private HttpTransport googleHttpTransport;
 
-	@Resource
-	private String googleIssuer;
+  @Resource
+  private String googleIssuer;
 
-	@Resource
-	private UserDetailsManager userDetailsService;
+  @Resource
+  private UserDetailsManager userDetailsService;
 
-	@Resource
-	private UserProfileStore userProfileStore;
+  @Resource
+  private UserProfileStore userProfileStore;
 
-	@Resource
-	private TokenEndpoint tokenEndpoint;
+  @Resource
+  private TokenEndpoint tokenEndpoint;
 
-	private UserProfile verifyGoogleLogin(String idToken) throws IOException, GeneralSecurityException {
-		// TODO: clean this mess up. This should be in a service. There
-		// shouldn't be any business logic inside a controller.
+  private UserProfile verifyGoogleLogin(String idToken) throws IOException, GeneralSecurityException {
+    // TODO: clean this mess up. This should be in a service. There
+    // shouldn't be any business logic inside a controller.
 
-		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(googleHttpTransport, googleJsonFactory)
-				.setAudience(Arrays.asList(googleClientId)).setIssuer(googleIssuer).build();
+    GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(googleHttpTransport, googleJsonFactory)
+        .setAudience(Arrays.asList(googleClientId)).setIssuer(googleIssuer).build();
 
-		GoogleIdToken googleIdToken = verifier.verify(idToken);
-		if (googleIdToken == null) {
-			throw new GeneralSecurityException("googleIdToken is null");
-		}
-		Payload payload = googleIdToken.getPayload();
+    GoogleIdToken googleIdToken = verifier.verify(idToken);
+    if (googleIdToken == null) {
+      throw new GeneralSecurityException("googleIdToken is null");
+    }
+    Payload payload = googleIdToken.getPayload();
 
-		ExternalProfileSource profileSource = new ExternalProfileSource();
+    Source source = Source.GOOGLE;
+    String referenceId = payload.getSubject();
 
-		profileSource.setSource(Source.GOOGLE);
-		profileSource.setReferenceId(payload.getSubject());
+    UserProfile fromDatabase = userProfileStore.getUserProfileByExternalSource(source, referenceId);
+    boolean newUser = fromDatabase == null;
 
-		UserProfile result = userProfileStore.getUserProfileByExternalSource(profileSource.getSource(),
-				profileSource.getReferenceId());
+    UserProfileBuilder builder = newUser ? UserProfile.builder().id(UUID.randomUUID()) : fromDatabase.toBuilder();
 
-		boolean newUser = false;
-		if (result == null) {
-			result = new UserProfile();
-			result.setId(UUID.randomUUID());
+    if (!payload.getEmailVerified()) {
+      // TODO: throw an exception? that seems like the cheapest way to
+      // handle
+      // this case. We don't want fake google users running around in
+      // our
+      // system.
+    }
 
-			profileSource.setUserProfileId(result.getId());
-			newUser = true;
+    builder.email(payload.getEmail());
 
-		}
+    String pictureUrl = (String) payload.get("picture");
+    builder.profileUrl(pictureUrl != null ? new URL(pictureUrl) : null);
 
-		if (!payload.getEmailVerified()) {
-			// TODO: throw an exception? that seems like the cheapest way to
-			// handle
-			// this case. We don't want fake google users running around in
-			// our
-			// system.
-		}
+    String locale = (String) payload.get("locale");
+    builder.locale(locale != null ? Locale.forLanguageTag(locale) : null);
 
-		result.setEmail(payload.getEmail());
+    builder.familyName((String) payload.get("family_name"));
+    builder.givenName((String) payload.get("given_name"));
 
-		String pictureUrl = (String) payload.get("picture");
-		result.setProfileUrl(pictureUrl != null ? new URL(pictureUrl) : null);
+    // We merge user data from google each time.
+    UserProfile updated = builder.build();
+    userProfileStore.mergeUserProfile(updated);
 
-		String locale = (String) payload.get("locale");
-		result.setLocale(locale != null ? Locale.forLanguageTag(locale) : null);
+    if (newUser) {
+      userProfileStore.saveExternalProfileSource(ExternalProfileSource.builder().source(source).referenceId(referenceId)
+          .userProfileId(updated.getId()).build());
+    }
 
-		result.setFamilyName((String) payload.get("family_name"));
-		result.setGivenName((String) payload.get("given_name"));
+    return fromDatabase;
 
-		// We merge user data from google each time.
-		userProfileStore.mergeUserProfile(result);
+  }
 
-		if (newUser) {
-			userProfileStore.saveExternalProfileSource(profileSource);
-		}
+  @RequestMapping(method = POST, headers = "x-google-token")
+  public ResponseEntity<Map<String, Object>> token(Authentication authenication,
+      @RequestHeader("x-google-token") String googleToken, @RequestParam Map<String, String> parameters)
+      throws IOException, GeneralSecurityException, HttpRequestMethodNotSupportedException {
 
-		return result;
+    UserProfile joustUser = verifyGoogleLogin(googleToken);
+    UserDetails userPrincipal = null;
+    String username = joustUser.getId().toString();
 
-	}
+    if (!userDetailsService.userExists(username)) {
+      userPrincipal = new User(username, generatePlaceholderPassword(), true, true, true, true,
+          DEFAULT_USER_AUTHORITIES);
+      userDetailsService.createUser(userPrincipal);
 
-	@RequestMapping(method = POST, headers = "x-google-token")
-	public ResponseEntity<Map<String, Object>> token(Authentication authenication,
-			@RequestHeader("x-google-token") String googleToken, @RequestParam Map<String, String> parameters)
-			throws IOException, GeneralSecurityException, HttpRequestMethodNotSupportedException {
+    } else {
+      userPrincipal = userDetailsService.loadUserByUsername(username);
 
-		UserProfile joustUser = verifyGoogleLogin(googleToken);
-		UserDetails userPrincipal = null;
-		String username = joustUser.getId().toString();
+    }
 
-		if (!userDetailsService.userExists(username)) {
-			userPrincipal = new User(username, generatePlaceholderPassword(), true, true, true, true,
-					DEFAULT_USER_AUTHORITIES);
-			userDetailsService.createUser(userPrincipal);
+    parameters.put("username", userPrincipal.getUsername());
+    parameters.put("password", userPrincipal.getPassword());
 
-		} else {
-			userPrincipal = userDetailsService.loadUserByUsername(username);
+    return getResponse(joustUser, tokenEndpoint.postAccessToken(authenication, parameters).getBody());
+  }
 
-		}
+  private ResponseEntity<Map<String, Object>> getResponse(UserProfile profile, OAuth2AccessToken accessToken) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cache-Control", "no-store");
+    headers.set("Pragma", "no-cache");
 
-		parameters.put("username", userPrincipal.getUsername());
-		parameters.put("password", userPrincipal.getPassword());
+    Map<String, Object> result = new HashMap<>();
+    result.put("profile", profile);
+    result.put("token", accessToken);
+    return new ResponseEntity<>(result, headers, HttpStatus.OK);
+  }
 
-		return getResponse(joustUser, tokenEndpoint.postAccessToken(authenication, parameters).getBody());
-	}
-
-	private ResponseEntity<Map<String, Object>> getResponse(UserProfile profile, OAuth2AccessToken accessToken) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Cache-Control", "no-store");
-		headers.set("Pragma", "no-cache");
-
-		Map<String, Object> result = new HashMap<>();
-		result.put("profile", profile);
-		result.put("token", accessToken);
-		return new ResponseEntity<>(result, headers, HttpStatus.OK);
-	}
-
-	public static String generatePlaceholderPassword() {
-		return UUID.randomUUID().toString();
-	}
+  public static String generatePlaceholderPassword() {
+    return UUID.randomUUID().toString();
+  }
 
 }

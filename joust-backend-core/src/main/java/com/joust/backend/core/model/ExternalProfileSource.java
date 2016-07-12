@@ -1,7 +1,16 @@
 package com.joust.backend.core.model;
 
+import java.net.URL;
+import java.util.Locale;
 import java.util.UUID;
 
+import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Builder(toBuilder = true)
+@Getter
 public class ExternalProfileSource {
 
 	public static enum Source {
@@ -12,29 +21,5 @@ public class ExternalProfileSource {
 	private Source source;
 	private String referenceId;
 	private UUID userProfileId;
-
-	public Source getSource() {
-		return source;
-	}
-
-	public void setSource(Source source) {
-		this.source = source;
-	}
-
-	public String getReferenceId() {
-		return referenceId;
-	}
-
-	public void setReferenceId(String referenceId) {
-		this.referenceId = referenceId;
-	}
-
-	public UUID getUserProfileId() {
-		return userProfileId;
-	}
-
-	public void setUserProfileId(UUID userProfileId) {
-		this.userProfileId = userProfileId;
-	}
 
 }

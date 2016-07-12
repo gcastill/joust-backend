@@ -8,10 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.joust.backend.model.domain.Heartbeat;
+import com.joust.backend.core.model.Heartbeat;
+
+import lombok.Data;
 
 @Controller
 @RequestMapping("/rest/heartbeat")
+@Data
 public class HeartbeatController {
 
   @Value("${build.version}")
@@ -23,27 +26,8 @@ public class HeartbeatController {
   @RequestMapping(method = GET)
   public ResponseEntity<Heartbeat> getHeartbeat() {
 
-    Heartbeat hb = new Heartbeat();
-    hb.setMessage("I'm here");
-    hb.setVersion(buildVersion);
-    hb.setBuild(buildLabel);
+    Heartbeat hb = Heartbeat.builder().buildLabel(buildLabel).version(buildVersion).message("I'm here").build();
     ResponseEntity<Heartbeat> response = new ResponseEntity<Heartbeat>(hb, HttpStatus.OK);
     return response;
-  }
-
-  public String getBuildLabel() {
-    return buildLabel;
-  }
-
-  public void setBuildLabel(String buildLabel) {
-    this.buildLabel = buildLabel;
-  }
-
-  public String getBuildVersion() {
-    return buildVersion;
-  }
-
-  public void setBuildVersion(String buildVersion) {
-    this.buildVersion = buildVersion;
   }
 }
