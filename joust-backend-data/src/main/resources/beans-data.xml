@@ -31,8 +31,6 @@
 
   <bean id='sqlFiles' class="com.joust.backend.data.spring.FilesAsStringFactoryBean" />
 
-
-
   <bean id='userProfileStore' class="com.joust.backend.data.spring.JdbcUserProfileStore" depends-on="flyway.migrate">
     <constructor-arg ref="dataSource" />
     <property name="mergeUserProfileSql" value="#{sqlFiles['MergeUserProfile.sql']}" />
