@@ -110,6 +110,7 @@
       <artifactId>memcached-session-manager-tc8</artifactId>
       <version>1.9.2</version>
     </dependency>
+    
     <dependency>
       <groupId>de.javakaffee.msm</groupId>
       <artifactId>msm-kryo-serializer</artifactId>
