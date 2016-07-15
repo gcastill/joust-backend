@@ -44,7 +44,6 @@
       <version>2.0.9.RELEASE</version>
     </dependency>
 
-
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
