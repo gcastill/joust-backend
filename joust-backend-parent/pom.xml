@@ -129,6 +129,7 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
+        <scope>test</scope>
         <version>${spring.version}</version>
       </dependency>
 
@@ -199,7 +200,9 @@
           <version>2.18.1</version>
           <configuration>
             <enableAssertions>true</enableAssertions>
-            <includes>**/*Test.java</includes>
+            <includes>
+              <include>**/*Test.java</include>
+            </includes>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <argLine>${surefireArgLine}</argLine>
           </configuration>
