@@ -333,7 +333,7 @@
 
   <profiles>
     <profile>
-      <id>integration</id>
+      <id>verify-integration</id>
       <build>
         <plugins>
           <plugin>
