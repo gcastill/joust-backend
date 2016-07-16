@@ -1,10 +1,6 @@
 package com.joust.backend.core.model;
 
-import java.net.URL;
-import java.util.Locale;
 import java.util.UUID;
-
-import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
 
 import lombok.Builder;
 import lombok.Getter;

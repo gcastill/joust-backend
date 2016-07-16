@@ -23,98 +23,64 @@ import com.joust.backend.core.model.ExternalProfileSource;
 import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@NoArgsConstructor
 public final class JdbcUserProfileStore implements UserProfileStore {
 
-	private final NamedParameterJdbcTemplate jdbcTemplate;
+  private NamedParameterJdbcTemplate jdbcTemplate;
 
-	private String mergeUserProfileSql;
-	private String getUserProfileSql;
-	private String getUserProfileByExternalSourceSql;
-	private String saveExternalProfileSourceSql;
-	private RowMapper<UserProfile> rowMapper;
+  private String mergeUserProfileSql;
+  private String getUserProfileSql;
+  private String getUserProfileByExternalSourceSql;
+  private String saveExternalProfileSourceSql;
+  private RowMapper<UserProfile> rowMapper;
 
-	public JdbcUserProfileStore(DataSource dataSource) {
-		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-	}
+  public JdbcUserProfileStore(DataSource dataSource) {
+    this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+  }
+  
+  
+  
 
-	@Override
-	public UserProfile getUserProfile(String id) {
-		return jdbcTemplate.queryForObject(getUserProfileSql, Collections.singletonMap(USER_PROFILE_ID, id), rowMapper);
-	}
+  @Override
+  public UserProfile getUserProfile(String id) {
+    return jdbcTemplate.queryForObject(getUserProfileSql, Collections.singletonMap(USER_PROFILE_ID, id), rowMapper);
+  }
 
-	@Override
-	public void mergeUserProfile(UserProfile profile) {
-		jdbcTemplate.update(mergeUserProfileSql, createParameterMap(profile));
+  @Override
+  public void mergeUserProfile(UserProfile profile) {
+    jdbcTemplate.update(mergeUserProfileSql, createParameterMap(profile));
 
-	}
+  }
 
-	@Override
-	public UserProfile getUserProfileByExternalSource(Source source, String referenceId) {
-		MapSqlParameterSource map = new MapSqlParameterSource();
-		map.addValue(SOURCE, source, Types.VARCHAR).addValue(REFERENCE_ID, referenceId);
-		return jdbcTemplate.query(getUserProfileByExternalSourceSql, map, rowMapper).stream().findFirst().orElse(null);
-	}
+  @Override
+  public UserProfile getUserProfileByExternalSource(Source source, String referenceId) {
+    MapSqlParameterSource map = new MapSqlParameterSource();
+    map.addValue(SOURCE, source, Types.VARCHAR).addValue(REFERENCE_ID, referenceId);
+    return jdbcTemplate.query(getUserProfileByExternalSourceSql, map, rowMapper).stream().findFirst().orElse(null);
+  }
 
-	@Override
-	public void saveExternalProfileSource(ExternalProfileSource externalProfileSource) {
-		jdbcTemplate.update(saveExternalProfileSourceSql, createParameterMap(externalProfileSource));
-	}
+  @Override
+  public void saveExternalProfileSource(ExternalProfileSource externalProfileSource) {
+    jdbcTemplate.update(saveExternalProfileSourceSql, createParameterMap(externalProfileSource));
+  }
 
-	MapSqlParameterSource createParameterMap(UserProfile profile) {
-		return new MapSqlParameterSource().addValue(USER_PROFILE_ID, profile.getId())
-				.addValue(EMAIL, profile.getEmail()).addValue(GIVEN_NAME, profile.getGivenName())
-				.addValue(FAMILY_NAME, profile.getFamilyName()).addValue(LOCALE, profile.getLocale(), Types.VARCHAR)
-				.addValue(PROFILE_URL, profile.getProfileUrl(), Types.VARCHAR);
-	}
+  MapSqlParameterSource createParameterMap(UserProfile profile) {
+    return new MapSqlParameterSource().addValue(USER_PROFILE_ID, profile.getId()).addValue(EMAIL, profile.getEmail())
+        .addValue(GIVEN_NAME, profile.getGivenName()).addValue(FAMILY_NAME, profile.getFamilyName())
+        .addValue(LOCALE, profile.getLocale(), Types.VARCHAR)
+        .addValue(PROFILE_URL, profile.getProfileUrl(), Types.VARCHAR);
+  }
 
-	private MapSqlParameterSource createParameterMap(ExternalProfileSource externalProfileSource) {
-		return new MapSqlParameterSource().addValue(SOURCE, externalProfileSource.getSource(), Types.VARCHAR)
-				.addValue(REFERENCE_ID, externalProfileSource.getReferenceId())
-				.addValue(USER_PROFILE_ID, externalProfileSource.getUserProfileId());
-	}
-
-	public NamedParameterJdbcTemplate getJdbcTemplate() {
-		return jdbcTemplate;
-	}
-
-	public String getMergeUserProfileSql() {
-		return mergeUserProfileSql;
-	}
-
-	public void setMergeUserProfileSql(String mergeUserProfileSql) {
-		this.mergeUserProfileSql = mergeUserProfileSql;
-	}
-
-	public String getGetUserProfileSql() {
-		return getUserProfileSql;
-	}
-
-	public void setGetUserProfileSql(String getUserProfileSql) {
-		this.getUserProfileSql = getUserProfileSql;
-	}
-
-	public String getGetUserProfileByExternalSourceSql() {
-		return getUserProfileByExternalSourceSql;
-	}
-
-	public void setGetUserProfileByExternalSourceSql(String getUserProfileByExternalSourceSql) {
-		this.getUserProfileByExternalSourceSql = getUserProfileByExternalSourceSql;
-	}
-
-	public String getSaveExternalProfileSourceSql() {
-		return saveExternalProfileSourceSql;
-	}
-
-	public void setSaveExternalProfileSourceSql(String saveExternalProfileSourceSql) {
-		this.saveExternalProfileSourceSql = saveExternalProfileSourceSql;
-	}
-
-	public RowMapper<UserProfile> getRowMapper() {
-		return rowMapper;
-	}
-
-	public void setRowMapper(RowMapper<UserProfile> rowMapper) {
-		this.rowMapper = rowMapper;
-	}
+  private MapSqlParameterSource createParameterMap(ExternalProfileSource externalProfileSource) {
+    return new MapSqlParameterSource().addValue(SOURCE, externalProfileSource.getSource(), Types.VARCHAR)
+        .addValue(REFERENCE_ID, externalProfileSource.getReferenceId())
+        .addValue(USER_PROFILE_ID, externalProfileSource.getUserProfileId());
+  }
 
 }

@@ -41,6 +41,16 @@
       <version>0.9.5.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.meanbean</groupId>
+      <artifactId>meanbean</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.joust.backend</groupId>
+      <artifactId>joust-backend-test</artifactId>
+    </dependency>
+    
   </dependencies>
 
 </project>

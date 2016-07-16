@@ -4,9 +4,11 @@ import java.net.URI;
 
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
+import lombok.Getter;
 import lombok.Setter;
 
 @Setter
+@Getter
 public class QueryStringFactoryBean extends AbstractFactoryBean<String> {
 
   private URI databaseUri;
