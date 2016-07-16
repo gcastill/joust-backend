@@ -8,6 +8,9 @@
     </layout>
   </appender>
 
+  <logger name="org.meanbean">
+    <level value="off" />
+  </logger>
   <root>
     <level value="DEBUG" />
     <appender-ref ref="console" />
