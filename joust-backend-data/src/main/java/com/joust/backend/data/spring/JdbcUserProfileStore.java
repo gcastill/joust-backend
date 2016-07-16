@@ -11,12 +11,14 @@ import static com.joust.backend.data.spring.UserProfileColumns.USER_PROFILE_ID;
 
 import java.sql.Types;
 import java.util.Collections;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.joust.backend.core.data.UserProfileStore;
 import com.joust.backend.core.model.ExternalProfileSource;
@@ -25,11 +27,13 @@ import com.joust.backend.core.model.UserProfile;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Setter
 @Getter
 @NoArgsConstructor
+@Transactional
 public final class JdbcUserProfileStore implements UserProfileStore {
 
   private NamedParameterJdbcTemplate jdbcTemplate;
@@ -43,17 +47,15 @@ public final class JdbcUserProfileStore implements UserProfileStore {
   public JdbcUserProfileStore(DataSource dataSource) {
     this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
   }
-  
-  
-  
 
   @Override
-  public UserProfile getUserProfile(String id) {
-    return jdbcTemplate.queryForObject(getUserProfileSql, Collections.singletonMap(USER_PROFILE_ID, id), rowMapper);
+  public UserProfile getUserProfile(@NonNull UUID id) {
+    return jdbcTemplate.queryForObject(getUserProfileSql, Collections.singletonMap(USER_PROFILE_ID, id.toString()),
+        rowMapper);
   }
 
   @Override
-  public void mergeUserProfile(UserProfile profile) {
+  public void mergeUserProfile(@NonNull UserProfile profile) {
     jdbcTemplate.update(mergeUserProfileSql, createParameterMap(profile));
 
   }

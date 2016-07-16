@@ -5,17 +5,19 @@ import java.util.Locale;
 import java.util.UUID;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Builder(toBuilder = true)
 @Getter
+@EqualsAndHashCode
 public class UserProfile {
 
-	private UUID id;
-	private String email;
-	private String givenName;
-	private String familyName;
-	private Locale locale;
-	private URL profileUrl;
+  private UUID id;
+  private String email;
+  private String givenName;
+  private String familyName;
+  private Locale locale;
+  private URL profileUrl;
 
 }

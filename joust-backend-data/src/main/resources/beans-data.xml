@@ -11,6 +11,10 @@
     <constructor-arg value="#{systemEnvironment['DATABASE_URL']}" />
   </bean>
 
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+
   <bean id='dbUrlQuery' class="com.joust.backend.data.spring.QueryStringFactoryBean" p:databaseUri-ref="dbUrl" />
 
   <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
