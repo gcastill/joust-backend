@@ -29,7 +29,8 @@
     <property name="dataSource" ref="dataSource" />
   </bean>
 
-  <bean id='sqlFiles' class="com.joust.backend.data.spring.FilesAsStringFactoryBean" />
+  <bean id='sqlFiles' class="com.joust.backend.data.spring.FileToStringFactoryBean" p:location="classpath:db/sql"
+    p:suffix=".sql" />
 
   <bean id='userProfileStore' class="com.joust.backend.data.spring.JdbcUserProfileStore" depends-on="flyway.migrate">
     <constructor-arg ref="dataSource" />
