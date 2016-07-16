@@ -11,8 +11,17 @@
   <logger name="org.meanbean">
     <level value="off" />
   </logger>
+
+  <logger name="org.springframework">
+    <level value="info" />
+  </logger>
+
+  <logger name="org.joust">
+    <level value="debug" />
+  </logger>
+
   <root>
-    <level value="DEBUG" />
+    <level value="info" />
     <appender-ref ref="console" />
   </root>
 
