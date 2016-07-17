@@ -4,7 +4,7 @@ CREATE TABLE user_profile (
   given_name text not null,
   family_name text null,
   profile_url text null,
-  locale varchar(50) not null,
+  locale varchar(50) null,
   CONSTRAINT user_profile_pkey PRIMARY KEY (user_profile_id)
 )
 WITH (
