@@ -14,18 +14,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import com.joust.backend.core.model.ExternalProfileSource;
-import com.joust.backend.core.model.UserProfile;
 import com.joust.backend.core.model.ExternalProfileSource.Source;
+import com.joust.backend.core.model.UserProfile;
 import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
 
-import junit.framework.Assert;
-
 @ContextConfiguration("classpath:beans-data.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 public class JdbcUserProfileStoreIT {
 
   @Resource

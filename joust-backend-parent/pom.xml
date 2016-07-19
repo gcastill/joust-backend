@@ -137,7 +137,6 @@
         <groupId>org.meanbean</groupId>
         <artifactId>meanbean</artifactId>
         <version>2.0.3</version>
-        <scope>test</scope>
       </dependency>
 
       <dependency>
@@ -150,6 +149,12 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
         <version>1.10.19</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <version>2.2.0</version>
       </dependency>
 
     </dependencies>

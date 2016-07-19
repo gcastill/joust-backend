@@ -19,19 +19,25 @@
       <artifactId>joust-backend-data</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.joust.backend</groupId>
+      <artifactId>joust-backend-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <!-- Spring security -->
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
       <version>${spring.security.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-web</artifactId>
       <version>${spring.security.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-config</artifactId>
@@ -104,31 +110,31 @@
       <artifactId>memcached-session-manager</artifactId>
       <version>1.9.2</version>
     </dependency>
-    
+
     <dependency>
       <groupId>de.javakaffee.msm</groupId>
       <artifactId>memcached-session-manager-tc8</artifactId>
       <version>1.9.2</version>
     </dependency>
-    
+
     <dependency>
       <groupId>de.javakaffee.msm</groupId>
       <artifactId>msm-kryo-serializer</artifactId>
       <version>1.9.2</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
       <version>2.6.3</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>2.6.3</version>
     </dependency>
-  
+
   </dependencies>
 
 
