@@ -1,5 +1,7 @@
 package com.joust.backend.web.mvc.controller.oauth.google;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.UUID;
 
 import org.junit.Test;
@@ -49,6 +51,6 @@ public class GoogleControllerTest {
 
   @Test
   public void testGeneratePlaceholderPassword() throws Exception {
-    UUID.fromString(GoogleController.generatePlaceholderPassword());
+    assertNotNull(UUID.fromString(GoogleController.generatePlaceholderPassword()));
   }
 }

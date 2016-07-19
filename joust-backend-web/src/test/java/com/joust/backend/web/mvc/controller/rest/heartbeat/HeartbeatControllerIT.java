@@ -5,43 +5,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.ContextHierarchy;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.joust.backend.web.mvc.MvcConfiguration;
+import com.joust.backend.web.mvc.controller.AbstractWebIT;
 
-@RunWith(SpringRunner.class)
-@WebAppConfiguration
-@ContextHierarchy({ @ContextConfiguration(locations = { "classpath:beans-web.xml", "classpath:beans-security.xml",
-    "classpath:beans-data.xml" }), @ContextConfiguration(classes = MvcConfiguration.class) })
-public class HeartbeatControllerIT {
-
-  @Autowired
-  private WebApplicationContext wac;
-
-  private MockMvc mockMvc;
-
-  @Before
-  public void setup() {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-  }
+public class HeartbeatControllerIT extends AbstractWebIT {
 
   @Test
-  public void getHeartbeat() throws Exception {
-    this.mockMvc.perform(get("/rest/heartbeat").accept(MediaType.parseMediaType("application/json")))
+  public void getHeartbeatNoSecurity() throws Exception {
+    withoutSecurity().perform(get("/rest/heartbeat").accept(MediaType.parseMediaType("application/json")))
         .andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"))
         .andExpect(jsonPath("$.message").value("I'm here")).andExpect(jsonPath("$.version").value("master-SNAPSHOT"))
         .andExpect(jsonPath("$.buildLabel").value("20160719.011115"));
+  }
+
+  @Test
+  public void getHeartbeatForbidden() throws Exception {
+    withSecurity().perform(get("/rest/heartbeat").accept(MediaType.parseMediaType("application/json")))
+        .andExpect(status().isUnauthorized());
   }
 
 }
