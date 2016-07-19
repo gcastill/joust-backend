@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.joust.backend.core.model.Heartbeat;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Controller
 @RequestMapping("/rest/heartbeat")
-@Data
+@Getter
+@Setter
 public class HeartbeatController {
 
   @Value("${build.version}")

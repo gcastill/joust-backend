@@ -43,11 +43,13 @@ import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
 import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Controller
 @RequestMapping("/oauth/google")
-@Data
+@Getter
+@Setter
 public class GoogleController {
 
   private static Set<GrantedAuthority> DEFAULT_USER_AUTHORITIES = Collections
