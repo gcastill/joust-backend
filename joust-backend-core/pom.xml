@@ -13,4 +13,10 @@
   <artifactId>joust-backend-core</artifactId>
 
 
+  <dependencies>
+    <dependency>
+      <groupId>com.joust.backend</groupId>
+      <artifactId>joust-backend-test</artifactId>
+    </dependency>
+  </dependencies>
 </project>
