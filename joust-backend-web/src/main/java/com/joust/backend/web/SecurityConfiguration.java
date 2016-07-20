@@ -2,6 +2,7 @@ package com.joust.backend.web;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -16,17 +17,17 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 @EnableWebSecurity
 public abstract class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Bean
-  public abstract DataSource dataSource();
+  @Autowired
+  private DataSource dataSource;
 
   @Bean
   public JdbcClientDetailsService clientDetails() {
-    return new JdbcClientDetailsService(dataSource());
+    return new JdbcClientDetailsService(dataSource);
   }
 
   @Bean
   public JdbcTokenStore tokenStore() {
-    return new JdbcTokenStore(dataSource());
+    return new JdbcTokenStore(dataSource);
   }
 
   @Bean
