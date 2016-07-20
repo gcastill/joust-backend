@@ -13,8 +13,6 @@ import java.sql.Types;
 import java.util.Collections;
 import java.util.UUID;
 
-import javax.sql.DataSource;
-
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,34 +23,28 @@ import com.joust.backend.core.model.ExternalProfileSource;
 import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 import lombok.NonNull;
-import lombok.Setter;
+import lombok.Value;
 
-@Setter
-@Getter
-@NoArgsConstructor
+@Value
+@Builder(toBuilder = true)
 @Transactional
 public final class JdbcUserProfileStore implements UserProfileStore {
 
   private NamedParameterJdbcTemplate jdbcTemplate;
-
-  private String mergeUserProfileSql;
-  private String getUserProfileSql;
-  private String getUserProfileByExternalSourceSql;
-  private String saveExternalProfileSourceSql;
+  private SqlConfig sql;
   private RowMapper<UserProfile> rowMapper;
 
   @Override
   public UserProfile getUserProfile(@NonNull UUID id) {
-    return jdbcTemplate.queryForObject(getUserProfileSql, Collections.singletonMap(USER_PROFILE_ID, id.toString()),
+    return jdbcTemplate.queryForObject(sql.getUserProfileSql, Collections.singletonMap(USER_PROFILE_ID, id.toString()),
         rowMapper);
   }
 
   @Override
   public void mergeUserProfile(@NonNull UserProfile profile) {
-    jdbcTemplate.update(mergeUserProfileSql, createParameterMap(profile));
+    jdbcTemplate.update(sql.mergeUserProfileSql, createParameterMap(profile));
 
   }
 
@@ -60,12 +52,12 @@ public final class JdbcUserProfileStore implements UserProfileStore {
   public UserProfile getUserProfileByExternalSource(Source source, String referenceId) {
     MapSqlParameterSource map = new MapSqlParameterSource();
     map.addValue(SOURCE, source, Types.VARCHAR).addValue(REFERENCE_ID, referenceId);
-    return jdbcTemplate.query(getUserProfileByExternalSourceSql, map, rowMapper).stream().findFirst().orElse(null);
+    return jdbcTemplate.query(sql.getUserProfileByExternalSourceSql, map, rowMapper).stream().findFirst().orElse(null);
   }
 
   @Override
   public void saveExternalProfileSource(ExternalProfileSource externalProfileSource) {
-    jdbcTemplate.update(saveExternalProfileSourceSql, createParameterMap(externalProfileSource));
+    jdbcTemplate.update(sql.saveExternalProfileSourceSql, createParameterMap(externalProfileSource));
   }
 
   MapSqlParameterSource createParameterMap(UserProfile profile) {
@@ -79,6 +71,15 @@ public final class JdbcUserProfileStore implements UserProfileStore {
     return new MapSqlParameterSource().addValue(SOURCE, externalProfileSource.getSource(), Types.VARCHAR)
         .addValue(REFERENCE_ID, externalProfileSource.getReferenceId())
         .addValue(USER_PROFILE_ID, externalProfileSource.getUserProfileId());
+  }
+
+  @Value
+  @Builder
+  public static class SqlConfig {
+    private String mergeUserProfileSql;
+    private String getUserProfileSql;
+    private String getUserProfileByExternalSourceSql;
+    private String saveExternalProfileSourceSql;
   }
 
 }

@@ -1,7 +1,10 @@
 package com.joust.backend.data.spring;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -12,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -20,7 +25,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 @Configuration
 public class DataConfiguration {
-  
+
   @Autowired
   Environment environment;
 
@@ -66,14 +71,6 @@ public class DataConfiguration {
   }
 
   @Bean
-  public Map<String, String> sqlFiles() throws Exception {
-    FileToStringFactoryBean factory = new FileToStringFactoryBean();
-    factory.setSuffix(".sql");
-    factory.setLocation("classpath:/db/sql");
-    return factory.createInstance();
-  }
-
-  @Bean
   @DependsOn("flyway")
   public JdbcTemplate jdbcTemplate() throws Exception {
     return new JdbcTemplate(dataSource());
@@ -85,16 +82,29 @@ public class DataConfiguration {
     return new NamedParameterJdbcTemplate(dataSource());
   }
 
-  @Bean
-  public JdbcUserProfileStore userProfileStore() throws Exception {
-    JdbcUserProfileStore userProfileStore = new JdbcUserProfileStore();
-    userProfileStore.setJdbcTemplate(namedParameterJdbcTemplate());
-    userProfileStore.setMergeUserProfileSql(sqlFiles().get("MergeUserProfile.sql"));
-    userProfileStore.setGetUserProfileByExternalSourceSql(sqlFiles().get("GetUserProfileByExternalSource.sql"));
-    userProfileStore.setGetUserProfileSql(sqlFiles().get("GetUserProfile.sql"));
-    userProfileStore.setSaveExternalProfileSourceSql(sqlFiles().get("SaveExternalProfileSource.sql"));
-    userProfileStore.setRowMapper(new UserProfileRowMapper());
-    return userProfileStore;
+  public JdbcUserProfileStore.SqlConfig userProfileSqlConfig() throws IOException {
+    return JdbcUserProfileStore.SqlConfig.builder()
+        .getUserProfileByExternalSourceSql(resourceToString("classpath:/db/sql/user-profile/GetUserProfileByExternalSource.sql"))
+        .getUserProfileSql(resourceToString("classpath:/db/sql/user-profile/GetUserProfile.sql"))
+        .mergeUserProfileSql(resourceToString("classpath:/db/sql/user-profile/MergeUserProfile.sql"))
+        .saveExternalProfileSourceSql(
+            resourceToString("classpath:/db/sql/user-profile/SaveExternalProfileSource.sql"))
+        .build();
   }
 
+  @Bean
+  public JdbcUserProfileStore userProfileStore() throws Exception {
+    return JdbcUserProfileStore.builder().jdbcTemplate(namedParameterJdbcTemplate()).sql(userProfileSqlConfig())
+        .rowMapper(new UserProfileRowMapper()).build();
+  }
+
+  private String resourceToString(String resourcePattern) throws IOException {
+    PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
+    Resource resource = resolver.getResource(resourcePattern);
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+      return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+    }
+
+  }
 }
