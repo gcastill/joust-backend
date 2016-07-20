@@ -11,6 +11,7 @@ import static com.joust.backend.data.spring.UserProfileColumns.USER_PROFILE_ID;
 
 import java.sql.Types;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -60,9 +61,15 @@ public final class JdbcUserProfileStore implements UserProfileStore {
     jdbcTemplate.update(sql.saveExternalProfileSourceSql, createParameterMap(externalProfileSource));
   }
 
+  @Override
+  public List<UserProfile> searchUserProfiles(UserProfile example) {
+    return jdbcTemplate.query(sql.searchUserProfilesSql, createParameterMap(example), rowMapper);
+  }
+
   MapSqlParameterSource createParameterMap(UserProfile profile) {
-    return new MapSqlParameterSource().addValue(USER_PROFILE_ID, profile.getId()).addValue(EMAIL, profile.getEmail())
-        .addValue(GIVEN_NAME, profile.getGivenName()).addValue(FAMILY_NAME, profile.getFamilyName())
+    return new MapSqlParameterSource().addValue(USER_PROFILE_ID, profile.getId(), Types.VARCHAR)
+        .addValue(EMAIL, profile.getEmail(), Types.VARCHAR).addValue(GIVEN_NAME, profile.getGivenName(), Types.VARCHAR)
+        .addValue(FAMILY_NAME, profile.getFamilyName(), Types.VARCHAR)
         .addValue(LOCALE, profile.getLocale(), Types.VARCHAR)
         .addValue(PROFILE_URL, profile.getProfileUrl(), Types.VARCHAR);
   }
@@ -80,6 +87,7 @@ public final class JdbcUserProfileStore implements UserProfileStore {
     private String getUserProfileSql;
     private String getUserProfileByExternalSourceSql;
     private String saveExternalProfileSourceSql;
+    private String searchUserProfilesSql;
   }
 
 }

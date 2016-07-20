@@ -1,8 +1,10 @@
 package com.joust.backend.data.spring;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -80,6 +82,36 @@ public class JdbcUserProfileStoreIT {
 
     UserProfile copy = instance.getUserProfileByExternalSource(Source.GOOGLE, "test");
     assertEquals(source, copy);
+
+  }
+
+  @Test
+  public void testSearch() throws Exception {
+    int userProfileStart = countRowsInTable("user_profile");
+    UserProfile source = randomUser().build();
+    instance.mergeUserProfile(source);
+    assertEquals(userProfileStart + 1, countRowsInTable("user_profile"));
+
+    instance.mergeUserProfile(source.toBuilder().id(UUID.randomUUID()).email("mike@joust.com").build());
+
+    List<UserProfile> searchUserProfiles = instance
+        .searchUserProfiles(UserProfile.builder().email("mike@joust.com").build());
+    assertFalse(searchUserProfiles.isEmpty());
+
+    searchUserProfiles = instance.searchUserProfiles(UserProfile.builder().email(source.getEmail()).build());
+    assertFalse(searchUserProfiles.isEmpty());
+
+    searchUserProfiles = instance.searchUserProfiles(UserProfile.builder().givenName(source.getGivenName()).build());
+    assertFalse(searchUserProfiles.isEmpty());
+
+    searchUserProfiles = instance.searchUserProfiles(UserProfile.builder().familyName(source.getFamilyName()).build());
+    assertFalse(searchUserProfiles.isEmpty());
+
+    searchUserProfiles = instance.searchUserProfiles(UserProfile.builder().profileUrl(source.getProfileUrl()).build());
+    assertFalse(searchUserProfiles.isEmpty());
+
+    searchUserProfiles = instance.searchUserProfiles(UserProfile.builder().locale(source.getLocale()).build());
+    assertFalse(searchUserProfiles.isEmpty());
 
   }
 

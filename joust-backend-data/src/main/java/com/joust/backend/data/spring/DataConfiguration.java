@@ -84,11 +84,12 @@ public class DataConfiguration {
 
   public JdbcUserProfileStore.SqlConfig userProfileSqlConfig() throws IOException {
     return JdbcUserProfileStore.SqlConfig.builder()
-        .getUserProfileByExternalSourceSql(resourceToString("classpath:/db/sql/user-profile/GetUserProfileByExternalSource.sql"))
+        .getUserProfileByExternalSourceSql(
+            resourceToString("classpath:/db/sql/user-profile/GetUserProfileByExternalSource.sql"))
         .getUserProfileSql(resourceToString("classpath:/db/sql/user-profile/GetUserProfile.sql"))
         .mergeUserProfileSql(resourceToString("classpath:/db/sql/user-profile/MergeUserProfile.sql"))
-        .saveExternalProfileSourceSql(
-            resourceToString("classpath:/db/sql/user-profile/SaveExternalProfileSource.sql"))
+        .saveExternalProfileSourceSql(resourceToString("classpath:/db/sql/user-profile/SaveExternalProfileSource.sql"))
+        .searchUserProfilesSql(resourceToString("classpath:/db/sql/user-profile/UserProfileSearch.sql"))
         .build();
   }
 
