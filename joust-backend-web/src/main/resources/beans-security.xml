@@ -87,14 +87,6 @@ http://www.springframework.org/schema/context/spring-context.xsd">
   </bean>
 
 
-  <!-- Used to create token and and every thing about them except for their persistence that is responsibility of TokenStore 
-    (Given here is a default implementation) -->
-  <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
-    <property name="tokenStore" ref="tokenStore" />
-    <property name="supportRefreshToken" value="true" />
-    <property name="clientDetailsService" ref="clientDetails" />
-  </bean>
-
   <bean id="userApprovalHandler" class="org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler">
     <property name="clientDetailsService" ref="clientDetails" />
     <property name="requestFactory">
