@@ -44,10 +44,6 @@ public final class JdbcUserProfileStore implements UserProfileStore {
   private String saveExternalProfileSourceSql;
   private RowMapper<UserProfile> rowMapper;
 
-  public JdbcUserProfileStore(DataSource dataSource) {
-    this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-  }
-
   @Override
   public UserProfile getUserProfile(@NonNull UUID id) {
     return jdbcTemplate.queryForObject(getUserProfileSql, Collections.singletonMap(USER_PROFILE_ID, id.toString()),

@@ -22,7 +22,7 @@ import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
 import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
 
-@ContextConfiguration("classpath:beans-data.xml")
+@ContextConfiguration(classes = DataConfiguration.class)
 @RunWith(SpringRunner.class)
 public class JdbcUserProfileStoreIT {
 
