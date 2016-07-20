@@ -70,11 +70,6 @@ public class DataConfiguration {
     return flyway;
   }
 
-  @Bean
-  @DependsOn("flyway")
-  public JdbcTemplate jdbcTemplate() throws Exception {
-    return new JdbcTemplate(dataSource());
-  }
 
   @Bean
   @DependsOn("flyway")
