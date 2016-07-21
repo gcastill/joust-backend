@@ -9,9 +9,9 @@
   </context-param>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>com.joust.backend.web.WebConfiguration com.joust.backend.data.DataConfiguration</param-value>
+    <param-value>com.joust.backend.web.WebConfiguration</param-value>
   </context-param>
-  
+
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>

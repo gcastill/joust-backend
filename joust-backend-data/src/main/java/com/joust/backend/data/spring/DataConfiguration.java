@@ -17,7 +17,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
@@ -27,7 +26,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 public class DataConfiguration {
 
   @Autowired
-  Environment environment;
+  private Environment environment;
 
   @Bean
   public URI dbUrl() throws Exception {
@@ -70,7 +69,6 @@ public class DataConfiguration {
     return flyway;
   }
 
-
   @Bean
   @DependsOn("flyway")
   public NamedParameterJdbcTemplate namedParameterJdbcTemplate() throws Exception {
@@ -84,8 +82,7 @@ public class DataConfiguration {
         .getUserProfileSql(resourceToString("classpath:/db/sql/user-profile/GetUserProfile.sql"))
         .mergeUserProfileSql(resourceToString("classpath:/db/sql/user-profile/MergeUserProfile.sql"))
         .saveExternalProfileSourceSql(resourceToString("classpath:/db/sql/user-profile/SaveExternalProfileSource.sql"))
-        .searchUserProfilesSql(resourceToString("classpath:/db/sql/user-profile/UserProfileSearch.sql"))
-        .build();
+        .searchUserProfilesSql(resourceToString("classpath:/db/sql/user-profile/UserProfileSearch.sql")).build();
   }
 
   @Bean
