@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
@@ -24,7 +25,7 @@ import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
 import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
 
-@ContextConfiguration(classes = DataConfiguration.class)
+@ContextHierarchy({ @ContextConfiguration(classes = { DataConfiguration.class }) })
 @RunWith(SpringRunner.class)
 public class JdbcUserProfileStoreIT {
 
