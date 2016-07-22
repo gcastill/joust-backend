@@ -27,6 +27,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +51,7 @@ import lombok.Setter;
 @RequestMapping("/oauth/google")
 @Getter
 @Setter
+@Transactional
 public class GoogleController {
 
   private static Set<GrantedAuthority> DEFAULT_USER_AUTHORITIES = Collections

@@ -25,7 +25,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 
   <security:http pattern="/oauth/google" create-session="stateless" authentication-manager-ref="clientAuthenticationManager"
     use-expressions="false">
-    <security:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
+    <security:intercept-url pattern="/oauth/google" access="IS_AUTHENTICATED_FULLY" />
     <security:anonymous enabled="false" />
     <security:http-basic entry-point-ref="clientAuthenticationEntryPoint" />
     <!-- include this only if you need to authenticate clients via request parameters -->
@@ -78,7 +78,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 
   <security:jdbc-user-service id="userDetailsService" data-source-ref="dataSource" />
 
-  <security:authentication-manager alias="authenticationManager">
+  <security:authentication-manager id="authenticationManager">
     <security:authentication-provider user-service-ref="userDetailsService" />
   </security:authentication-manager>
 
@@ -121,9 +121,6 @@ http://www.springframework.org/schema/context/spring-context.xsd">
   </oauth:authorization-server>
 
   <oauth:resource-server id="resourceServerFilter" resource-id="test" token-services-ref="tokenServices" />
-  <!-- ClientsDeailsService: Entry Point to clients database (given is in memory implementation) -->
-
-
 
   <bean id="clientDetails" class="org.springframework.security.oauth2.provider.client.JdbcClientDetailsService">
     <constructor-arg ref="dataSource" />

@@ -19,9 +19,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+@EnableTransactionManagement
 @Configuration
 public class DataConfiguration {
 
@@ -35,7 +37,7 @@ public class DataConfiguration {
 
   @Bean
   @DependsOn("flyway")
-  public DataSourceTransactionManager transactionManager() throws Exception {
+  public DataSourceTransactionManager txManager() throws Exception {
     return new DataSourceTransactionManager(dataSource());
   }
 
