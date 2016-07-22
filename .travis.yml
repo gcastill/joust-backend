@@ -3,3 +3,10 @@ jdk:
   oraclejdk8
 script:
   mvn clean install -P verify-integration
+deploy:
+  provider: heroku
+  api_key: 
+    secure: "CKTQ8hkAf7IUTxUb9Otp8pOlZjh1Dc/qjmjLL/KUSjG7OXlPIWJyHD42RJVt1OOJ/5tBLLPaT/+TQnJn5srD6yFft/B8biTRb1lZuKrUH96GQ3Uo+uPwPwBzJJOzwdM7tY3nn1MrHH+g7QJGGGry1smc0Kjg1DSOPptyTxFuyJuleOO/ruNQK4UNfn6TriJBfUsBQq+P9pva7dwJ7f2u5imGrb9ilpPdFDpC9Brhr/fs0rnz3y/0a0GygTiT+wxnu+AZo7Txsbe9oyjXPOm3GbMGKSN5UOy4kXzcwJj9U1Pgi5sHq6pJsACb04cu93DgHqj7ntzrcIBM52QVlLot1uaTbGPNWnWRSbvLlJfQjxTNASqR8C6ptlaUHPgF34IjAnUAXYXkBtUqFltRJM+jhb0wHOiSDL2MM2zasd7pearf0yYfmOvRbLNF0hV/FwlIBiTIzLu6RR10jXNVTYBqFrkFcNdgV51Ekg2HoywFS7PGeBhRy1zD7cCB+ZikC672EUs3FzwDZCttotcyRLeSmTLGqLrLlauevG/EQuuX7mSSgykX13mhEhIxCBTnXxHk8XEa+qLheYL9MiNF7eNNf1t5B9SyWgxptXTHnM0IjEELlVjXUvPdTXPx9r5nllPK4V3cmW3/R3Cx7VCZARMw7bikvPC2K1Rf7uBeB6YRGIs="
+  app:
+    master: joust-backend
+  
