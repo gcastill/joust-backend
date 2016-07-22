@@ -20,6 +20,7 @@ import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
+import com.joust.backend.core.data.UserProfileStore;
 import com.joust.backend.core.model.ExternalProfileSource;
 import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
@@ -30,7 +31,7 @@ import com.joust.backend.core.model.UserProfile.UserProfileBuilder;
 public class JdbcUserProfileStoreIT {
 
   @Resource
-  private JdbcUserProfileStore instance;
+  private UserProfileStore instance;
 
   @Resource
   private DataSource dataSource;

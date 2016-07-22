@@ -30,6 +30,7 @@ import lombok.Value;
 
 @Value
 @Builder(toBuilder = true)
+@Transactional
 public final class JdbcUserProfileStore implements UserProfileStore {
 
   private NamedParameterJdbcTemplate jdbcTemplate;
