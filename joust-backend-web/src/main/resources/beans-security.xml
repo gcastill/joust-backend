@@ -82,33 +82,6 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     <security:authentication-provider user-service-ref="userDetailsService" />
   </security:authentication-manager>
 
-  <bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
-    <constructor-arg ref="clientDetails" />
-  </bean>
-
-  <!-- Used for the persistenceof tokens -->
-  <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
-    <constructor-arg ref="dataSource" />
-  </bean>
-
-  <!-- Used to create token and and every thing about them except for their persistence that is responsibility of TokenStore 
-    (Given here is a default implementation) -->
-  <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
-    <property name="tokenStore" ref="tokenStore" />
-    <property name="supportRefreshToken" value="true" />
-    <property name="clientDetailsService" ref="clientDetails" />
-  </bean>
-
-  <bean id="userApprovalHandler" class="org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler">
-    <property name="clientDetailsService" ref="clientDetails" />
-    <property name="requestFactory">
-      <bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
-        <constructor-arg ref="clientDetails" />
-      </bean>
-    </property>
-    <property name="tokenStore" ref="tokenStore" />
-  </bean>
-
   <!-- authorization-server aka AuthorizationServerTokenServices is an interface that defines everything necessary for token 
     management -->
   <oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices"
@@ -121,10 +94,6 @@ http://www.springframework.org/schema/context/spring-context.xsd">
   </oauth:authorization-server>
 
   <oauth:resource-server id="resourceServerFilter" resource-id="test" token-services-ref="tokenServices" />
-
-  <bean id="clientDetails" class="org.springframework.security.oauth2.provider.client.JdbcClientDetailsService">
-    <constructor-arg ref="dataSource" />
-  </bean>
 
   <oauth:expression-handler id="oauthExpressionHandler" />
 
