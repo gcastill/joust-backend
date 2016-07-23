@@ -22,4 +22,4 @@ Heroku can be used to run this application locally. However, Google login may no
 Remote - Heroku
 ===============
 This application is also hosted on Heroku. It can be accessed at the following URL:
-https://joust-backend.herokuapp.com/login
+http://joustframework.com
