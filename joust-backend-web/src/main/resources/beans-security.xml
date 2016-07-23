@@ -46,42 +46,6 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     <security:csrf disabled="true" />
   </security:http>
 
-
-  <bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
-    <property name="realmName" value="test" />
-  </bean>
-
-  <bean id="clientAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
-    <property name="realmName" value="test/client" />
-    <property name="typeName" value="Basic" />
-  </bean>
-
-  <bean id="oauthAccessDeniedHandler" class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
-
-  <bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
-    <property name="authenticationManager" ref="clientAuthenticationManager" />
-  </bean>
-
-  <bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased" xmlns="http://www.springframework.org/schema/beans">
-    <constructor-arg>
-      <list>
-        <bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter" />
-        <bean class="org.springframework.security.access.vote.RoleVoter" />
-        <bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
-      </list>
-    </constructor-arg>
-  </bean>
-
-  <security:authentication-manager id="clientAuthenticationManager">
-    <security:authentication-provider user-service-ref="clientDetailsUserService" />
-  </security:authentication-manager>
-
-  <security:jdbc-user-service id="userDetailsService" data-source-ref="dataSource" />
-
-  <security:authentication-manager id="authenticationManager">
-    <security:authentication-provider user-service-ref="userDetailsService" />
-  </security:authentication-manager>
-
   <!-- authorization-server aka AuthorizationServerTokenServices is an interface that defines everything necessary for token 
     management -->
   <oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices"
@@ -93,10 +57,8 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     <oauth:password />
   </oauth:authorization-server>
 
-  <oauth:resource-server id="resourceServerFilter" resource-id="test" token-services-ref="tokenServices" />
 
-  <oauth:expression-handler id="oauthExpressionHandler" />
 
-  <oauth:web-expression-handler id="oauthWebExpressionHandler" />
+
 
 </beans>
