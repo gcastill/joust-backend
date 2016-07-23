@@ -13,12 +13,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.joust.backend.data.spring.DataConfiguration;
+import com.joust.backend.web.SecurityConfiguration;
 import com.joust.backend.web.WebConfiguration;
 import com.joust.backend.web.mvc.MvcConfiguration;
 
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
-@ContextHierarchy({ @ContextConfiguration(classes = { WebConfiguration.class, DataConfiguration.class }),
+@ContextHierarchy({
+    @ContextConfiguration(classes = { WebConfiguration.class, DataConfiguration.class, SecurityConfiguration.class }),
     @ContextConfiguration(classes = MvcConfiguration.class) })
 public abstract class AbstractWebIT {
 
