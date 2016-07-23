@@ -1,4 +1,4 @@
-package com.joust.backend.web.mvc.controller.oauth.google;
+package com.joust.backend.web.spring.mvc.controller.oauth.google;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 

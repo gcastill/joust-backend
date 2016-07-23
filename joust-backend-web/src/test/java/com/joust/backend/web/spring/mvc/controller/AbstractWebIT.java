@@ -1,4 +1,4 @@
-package com.joust.backend.web.mvc.controller;
+package com.joust.backend.web.spring.mvc.controller;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
@@ -13,9 +13,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.joust.backend.data.spring.DataConfiguration;
-import com.joust.backend.web.SecurityConfiguration;
-import com.joust.backend.web.WebConfiguration;
-import com.joust.backend.web.mvc.MvcConfiguration;
+import com.joust.backend.web.spring.SecurityConfiguration;
+import com.joust.backend.web.spring.WebConfiguration;
+import com.joust.backend.web.spring.mvc.MvcConfiguration;
 
 @RunWith(SpringRunner.class)
 @WebAppConfiguration

@@ -9,7 +9,7 @@
   </context-param>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>com.joust.backend.web.WebConfiguration com.joust.backend.data.spring.DataConfiguration com.joust.backend.web.SecurityConfiguration</param-value>
+    <param-value>com.joust.backend.web.spring.WebConfiguration com.joust.backend.data.spring.DataConfiguration com.joust.backend.web.spring.SecurityConfiguration</param-value>
   </context-param>
 
   <listener>
@@ -29,7 +29,7 @@
     </init-param>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>com.joust.backend.web.mvc.MvcConfiguration</param-value>
+      <param-value>com.joust.backend.web.spring.mvc.MvcConfiguration</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>

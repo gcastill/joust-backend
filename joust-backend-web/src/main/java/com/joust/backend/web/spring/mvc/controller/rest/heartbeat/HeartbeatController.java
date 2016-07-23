@@ -1,4 +1,4 @@
-package com.joust.backend.web.mvc.controller.rest.heartbeat;
+package com.joust.backend.web.spring.mvc.controller.rest.heartbeat;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 

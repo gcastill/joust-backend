@@ -1,4 +1,4 @@
-package com.joust.backend.web.mvc.controller.oauth.google;
+package com.joust.backend.web.spring.mvc.controller.oauth.google;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -15,6 +15,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.joust.backend.core.data.UserProfileStore;
 import com.joust.backend.test.meanbean.BeanTesterBuilder;
+import com.joust.backend.web.spring.mvc.controller.oauth.google.GoogleController;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GoogleControllerTest {

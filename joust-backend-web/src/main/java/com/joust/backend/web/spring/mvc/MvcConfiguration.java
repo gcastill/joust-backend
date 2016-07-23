@@ -1,4 +1,4 @@
-package com.joust.backend.web.mvc;
+package com.joust.backend.web.spring.mvc;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +14,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 @Configuration
-@ComponentScan(basePackages = "com.joust.backend.web.mvc")
+@ComponentScan(basePackages = "com.joust.backend.web.spring.mvc")
 public class MvcConfiguration extends WebMvcConfigurationSupport {
 
   @Override

@@ -1,4 +1,4 @@
-package com.joust.backend.web;
+package com.joust.backend.web.spring;
 
 import javax.sql.DataSource;
 

@@ -1,4 +1,4 @@
-package com.joust.backend.web.mvc.controller.rest.heartbeat;
+package com.joust.backend.web.spring.mvc.controller.rest.heartbeat;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
-import com.joust.backend.web.mvc.controller.AbstractWebIT;
+import com.joust.backend.web.spring.mvc.controller.AbstractWebIT;
 
 public class HeartbeatControllerIT extends AbstractWebIT {
 
