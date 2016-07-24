@@ -338,7 +338,7 @@
                 <include>**/*IT.java</include>
               </includes>
               <!-- Sets the VM argument line used when integration tests are run. -->
-              <argLine>${failsafeArgLine}</argLine>
+              <argLine>${failsafeArgLineIT}</argLine>
             </configuration>
             <executions>
               <execution>
@@ -366,7 +366,7 @@
                   <!-- Sets the path to the file which contains the execution data. -->
                   <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
                   <!-- Sets the name of the property containing the settings for JaCoCo runtime agent. -->
-                  <propertyName>failsafeArgLine</propertyName>
+                  <propertyName>failsafeArgLineIT</propertyName>
                 </configuration>
               </execution>
               <!-- Ensures that the code coverage report for integration tests after integration tests have been run. -->
@@ -381,6 +381,68 @@
                   <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
                   <!-- Sets the output directory for the code coverage report. -->
                   <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>verify-functionality</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.18.1</version>
+            <configuration>
+              <includes>
+                <include>**/*FT.java</include>
+              </includes>
+              <!-- Sets the VM argument line used when integration tests are run. -->
+              <argLine>${failsafeArgLineFT}</argLine>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.7.7.201606060606</version>
+            <executions>
+              <!-- Prepares the property pointing to the JaCoCo runtime agent which is passed as VM argument when Maven the 
+                Failsafe plugin is executed. -->
+              <execution>
+                <id>pre-integration-test</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+                <configuration>
+                  <!-- Sets the path to the file which contains the execution data. -->
+                  <destFile>${project.build.directory}/coverage-reports/jacoco-ft.exec</destFile>
+                  <!-- Sets the name of the property containing the settings for JaCoCo runtime agent. -->
+                  <propertyName>failsafeArgLineFT</propertyName>
+                </configuration>
+              </execution>
+              <!-- Ensures that the code coverage report for integration tests after integration tests have been run. -->
+              <execution>
+                <id>post-integration-test</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+                <configuration>
+                  <!-- Sets the path to the file which contains the execution data. -->
+                  <dataFile>${project.build.directory}/coverage-reports/jacoco-ft.exec</dataFile>
+                  <!-- Sets the output directory for the code coverage report. -->
+                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-ft</outputDirectory>
                 </configuration>
               </execution>
             </executions>

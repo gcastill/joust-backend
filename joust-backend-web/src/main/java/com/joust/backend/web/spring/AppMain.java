@@ -17,7 +17,7 @@ public class AppMain {
 
   public static final String ROOT = "";
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String... args) throws Exception {
 
     Map<String, String> env = System.getenv();
 
