@@ -19,7 +19,6 @@ APP_DIR=`readlink -f $BIN_DIR/..`;
 ETC_DIR=$APP_DIR/etc;
 LIB_DIR=$APP_DIR/lib;
 
-JAVA_OPTS="$JAVA_OPTS -Dproject.basedir=$APP_DIR";
 CLASSPATH="$ETC_DIR:$LIB_DIR/*"
 
 cygwin=false
@@ -35,7 +34,7 @@ if $cygwin; then
 fi
 
 
-COMMAND="java $JAVA_OPTS -cp $CLASSPATH com.joust.backend.web.AppMain"
+COMMAND="java $JAVA_OPTS -cp $CLASSPATH com.joust.backend.web.spring.AppMain"
 echo $COMMAND;
 $COMMAND;
 

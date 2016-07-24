@@ -17,7 +17,7 @@ public class HeartbeatControllerIT extends AbstractWebIT {
     withoutSecurity().perform(get("/rest/heartbeat").accept(MediaType.parseMediaType("application/json")))
         .andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"))
         .andExpect(jsonPath("$.message").value("I'm here")).andExpect(jsonPath("$.version").value("master-SNAPSHOT"))
-        .andExpect(jsonPath("$.buildLabel").value("20160719.011115"));
+        .andExpect(jsonPath("$.buildLabel").isNotEmpty());
   }
 
   @Test

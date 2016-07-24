@@ -1,12 +1,12 @@
-package com.joust.backend.web;
+package com.joust.backend.web.spring;
 
-import java.io.File;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.catalina.Context;
-import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.webresources.StandardRoot;
+import org.springframework.web.SpringServletContainerInitializer;
 
 import de.javakaffee.web.msm.MemcachedBackupSessionManager;
 import de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory;
@@ -15,26 +15,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AppMain {
 
+  public static final String ROOT = "";
+
   public static void main(String[] args) throws Exception {
 
     Map<String, String> env = System.getenv();
 
     Tomcat tomcat = new Tomcat();
+    // this makes it easy to clean up tomcat created files when running from
+    // within a maven environment.
     tomcat.setBaseDir("target");
 
     String webPort = env.getOrDefault("PORT", "8080");
 
-    File baseDir = new File(System.getProperty("project.basedir", "target/standalone"));
-
     tomcat.setPort(Integer.valueOf(webPort));
 
-    File webapp = new File(baseDir, "webapp");
+    Context ctx = tomcat.addContext(ROOT, null);
 
-    Context ctx = tomcat.addWebapp("/", webapp.getAbsolutePath());
-
-    WebResourceRoot resources = new StandardRoot(ctx);
-
-    ctx.setResources(resources);
+    ctx.addServletContainerInitializer(new SpringServletContainerInitializer(),
+        Stream.of(JoustWebInitializer.class).collect(Collectors.toSet()));
 
     setSessionManager(ctx);
 

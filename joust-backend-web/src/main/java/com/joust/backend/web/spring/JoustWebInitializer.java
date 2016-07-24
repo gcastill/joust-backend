@@ -28,7 +28,7 @@ public class JoustWebInitializer implements WebApplicationInitializer {
     container.addListener(new ContextLoaderListener());
     container.addListener(new RequestContextListener());
 
-    ServletRegistration.Dynamic servlet = container.addServlet("mvc", new DispatcherServlet());
+    ServletRegistration.Dynamic servlet = container.addServlet("default", new DispatcherServlet());
     servlet.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
     servlet.setInitParameter("contextConfigLocation", MvcConfiguration.class.getName());
 
