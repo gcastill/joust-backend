@@ -63,18 +63,7 @@ public class AppMain {
   }
 
   public static void main(String... args) throws Exception {
-    AppMain main = new AppMain(new Tomcat()).init().start();
-
-    Scanner scan = new Scanner(System.in);
-
-    while (scan.hasNextLine()) {
-      String line = scan.nextLine();
-      if (line.equals("SHUTDOWN")) {
-        main.stop().destroy();
-        break;
-      }
-    }
-    scan.close();
+    new AppMain(new Tomcat()).init().start().await();
 
   }
 
