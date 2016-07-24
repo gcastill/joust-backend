@@ -2,10 +2,9 @@ language: java
 jdk:
   oraclejdk8
 install:
-  - mvn -N io.takari:maven:wrapper
-  - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V  
+  - mvn -N io.takari:maven:wrapper 
 script: 
-  mvnw clean install -P verify-integration
+  ./mvnw clean install -P verify-integration,verify-functionality
 deploy:
   provider: heroku
   api_key: 
