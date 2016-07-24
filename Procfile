@@ -1,1 +1,1 @@
-web:  sh joust-backend-web/target/heroku/bin/appmain.sh
+web:  sh joust-backend-web/target/standalone/bin/appmain.sh

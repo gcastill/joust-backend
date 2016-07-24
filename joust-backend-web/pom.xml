@@ -158,11 +158,11 @@
               <goal>assembly</goal>
             </goals>
             <configuration>
-              <finalName>heroku</finalName>
+              <finalName>standalone</finalName>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
               <descriptors>
-                <descriptor>${basedir}/src/assembly/heroku.xml</descriptor>
+                <descriptor>${basedir}/src/assembly/standalone.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
