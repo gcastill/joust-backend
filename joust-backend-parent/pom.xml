@@ -281,7 +281,7 @@
                 <environmentVariables>
                   <PORT>${httpPort}</PORT>
                   <project.version>${project.version}</project.version>
-                  <build.label>${build.timestamp}</build.label>
+                  <build.timestamp>${build.timestamp}</build.timestamp>
                 </environmentVariables>
               </configuration>
             </execution>
@@ -300,7 +300,7 @@
                 <environmentVariables>
                   <PORT>${httpPort}</PORT>
                   <project.version>${project.version}</project.version>
-                  <build.label>${build.timestamp}</build.label>
+                  <build.timestamp>${build.timestamp}</build.timestamp>
                 </environmentVariables>
                 <skipITs>skip.FunctionalTests</skipITs>
               </configuration>
