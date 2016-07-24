@@ -278,6 +278,11 @@
                 <!-- Sets the VM argument line used when integration tests are run. -->
                 <argLine>${failsafeArgLineIT}</argLine>
                 <skipITs>skip.IntegrationTests</skipITs>
+                <environmentVariables>
+                  <PORT>${httpPort}</PORT>
+                  <project.version>${project.version}</project.version>
+                  <build.label>${build.timestamp}</build.label>
+                </environmentVariables>
               </configuration>
             </execution>
             <execution>
@@ -294,6 +299,8 @@
                 <argLine>${failsafeArgLineFT}</argLine>
                 <environmentVariables>
                   <PORT>${httpPort}</PORT>
+                  <project.version>${project.version}</project.version>
+                  <build.label>${build.timestamp}</build.label>
                 </environmentVariables>
                 <skipITs>skip.FunctionalTests</skipITs>
               </configuration>
