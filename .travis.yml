@@ -2,7 +2,8 @@ language: java
 jdk:
   oraclejdk8
 script:
-  mvn clean install -P verify-integration
+  - chmod +x mvnw  
+  - mvnw clean install -P verify-integration
 deploy:
   provider: heroku
   api_key: 
