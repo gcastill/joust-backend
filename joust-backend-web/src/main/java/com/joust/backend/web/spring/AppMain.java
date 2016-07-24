@@ -1,10 +1,12 @@
 package com.joust.backend.web.spring;
 
 import java.util.Map;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.springframework.web.SpringServletContainerInitializer;
 
@@ -17,18 +19,19 @@ public class AppMain {
 
   public static final String ROOT = "";
 
-  public static void main(String... args) throws Exception {
+  private Tomcat tomcat;
 
+  public AppMain(Tomcat tomcat) {
+    this.tomcat = tomcat;
+  }
+
+  public AppMain init() {
     Map<String, String> env = System.getenv();
 
-    Tomcat tomcat = new Tomcat();
     // this makes it easy to clean up tomcat created files when running from
     // within a maven environment.
     tomcat.setBaseDir("target");
-
-    String webPort = env.getOrDefault("PORT", "8080");
-
-    tomcat.setPort(Integer.valueOf(webPort));
+    tomcat.setPort(Integer.valueOf(env.getOrDefault("PORT", "8080")));
 
     Context ctx = tomcat.addContext(ROOT, null);
 
@@ -36,9 +39,43 @@ public class AppMain {
         Stream.of(JoustWebInitializer.class).collect(Collectors.toSet()));
 
     setSessionManager(ctx);
+    return this;
+  }
 
+  public AppMain start() throws Exception {
     tomcat.start();
+    return this;
+  }
+
+  public AppMain stop() throws Exception {
+    tomcat.stop();
+    return this;
+  }
+
+  public AppMain destroy() throws LifecycleException {
+    tomcat.destroy();
+    return this;
+  }
+
+  public AppMain await() {
     tomcat.getServer().await();
+    return this;
+  }
+
+  public static void main(String... args) throws Exception {
+    AppMain main = new AppMain(new Tomcat()).init().start();
+
+    Scanner scan = new Scanner(System.in);
+
+    while (scan.hasNextLine()) {
+      String line = scan.nextLine();
+      if (line.equals("SHUTDOWN")) {
+        main.stop().destroy();
+        break;
+      }
+    }
+    scan.close();
+
   }
 
   private static void setSessionManager(Context ctx) {

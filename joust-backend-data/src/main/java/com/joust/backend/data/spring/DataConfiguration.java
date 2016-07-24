@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.jolbox.bonecp.BoneCPDataSource;
 
 @EnableTransactionManagement
 @Configuration
@@ -41,10 +41,11 @@ public class DataConfiguration {
     return new DataSourceTransactionManager(dataSource());
   }
 
-  @Bean
+  @Bean(destroyMethod = "close")
   public DataSource dataSource() throws Exception {
     URI dbUrl = dbUrl();
-    ComboPooledDataSource dataSource = new ComboPooledDataSource();
+    BoneCPDataSource dataSource = new BoneCPDataSource();
+
     dataSource.setDriverClass(Driver.class.getName());
 
     String dbUrlQuery = dbUrl.getQuery();

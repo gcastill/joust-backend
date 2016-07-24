@@ -25,6 +25,8 @@
     <tomcat.version>8.0.32</tomcat.version>
     <slf4j.version>1.7.12</slf4j.version>
     <spring.security.version>4.1.1.RELEASE</spring.security.version>
+    <skip.FunctionalTests>true</skip.FunctionalTests>
+    <skip.IntegrationTests>true</skip.IntegrationTests>
   </properties>
 
   <dependencyManagement>
@@ -186,6 +188,25 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.11</version>
+          <executions>
+            <execution>
+              <id>reserve-ports</id>
+              <phase>initialize</phase>
+              <goals>
+                <goal>reserve-network-port</goal>
+              </goals>
+              <configuration>
+                <portNames>
+                  <portName>httpPort</portName>
+                </portNames>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.5.1</version>
@@ -194,7 +215,6 @@
             <target>1.8</target>
           </configuration>
         </plugin>
-
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
@@ -242,6 +262,45 @@
           </executions>
         </plugin>
         <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.18.1</version>
+          <executions>
+            <execution>
+              <id>integration-tests</id>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+              <configuration>
+                <includes>
+                  <include>**/*IT.java</include>
+                </includes>
+                <!-- Sets the VM argument line used when integration tests are run. -->
+                <argLine>${failsafeArgLineIT}</argLine>
+                <skipITs>skip.IntegrationTests</skipITs>
+              </configuration>
+            </execution>
+            <execution>
+              <id>functional-tests</id>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+              <configuration>
+                <includes>
+                  <include>**/*FT.java</include>
+                </includes>
+                <!-- Sets the VM argument line used when integration tests are run. -->
+                <argLine>${failsafeArgLineFT}</argLine>
+                <environmentVariables>
+                  <PORT>${httpPort}</PORT>
+                </environmentVariables>
+                <skipITs>skip.FunctionalTests</skipITs>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.7.7.201606060606</version>
@@ -272,6 +331,64 @@
                 <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
                 <!-- Sets the output directory for the code coverage report. -->
                 <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+              </configuration>
+            </execution>
+            <!-- Prepares the property pointing to the JaCoCo runtime agent which is passed as VM argument when Maven the 
+              Failsafe plugin is executed. -->
+            <execution>
+              <id>pre-integration-test</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+              <configuration>
+                <!-- Sets the path to the file which contains the execution data. -->
+                <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+                <!-- Sets the name of the property containing the settings for JaCoCo runtime agent. -->
+                <propertyName>failsafeArgLineIT</propertyName>
+              </configuration>
+            </execution>
+            <!-- Ensures that the code coverage report for integration tests after integration tests have been run. -->
+            <execution>
+              <id>post-integration-test</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <configuration>
+                <!-- Sets the path to the file which contains the execution data. -->
+                <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+                <!-- Sets the output directory for the code coverage report. -->
+                <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+              </configuration>
+            </execution>
+            <!-- Prepares the property pointing to the JaCoCo runtime agent which is passed as VM argument when Maven the 
+              Failsafe plugin is executed. -->
+            <execution>
+              <id>pre-functional-test</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+              <configuration>
+                <!-- Sets the path to the file which contains the execution data. -->
+                <destFile>${project.build.directory}/coverage-reports/jacoco-ft.exec</destFile>
+                <!-- Sets the name of the property containing the settings for JaCoCo runtime agent. -->
+                <propertyName>failsafeArgLineFT</propertyName>
+              </configuration>
+            </execution>
+            <!-- Ensures that the code coverage report for integration tests after integration tests have been run. -->
+            <execution>
+              <id>post-functional-test</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <configuration>
+                <!-- Sets the path to the file which contains the execution data. -->
+                <dataFile>${project.build.directory}/coverage-reports/jacoco-ft.exec</dataFile>
+                <!-- Sets the output directory for the code coverage report. -->
+                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ft</outputDirectory>
               </configuration>
             </execution>
           </executions>
@@ -321,6 +438,26 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>reserve-ports</id>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>integration-tests</id>
+          </execution>
+          <execution>
+            <id>functional-tests</id>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -328,127 +465,15 @@
   <profiles>
     <profile>
       <id>verify-integration</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.18.1</version>
-            <configuration>
-              <includes>
-                <include>**/*IT.java</include>
-              </includes>
-              <!-- Sets the VM argument line used when integration tests are run. -->
-              <argLine>${failsafeArgLineIT}</argLine>
-            </configuration>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.7.201606060606</version>
-            <executions>
-              <!-- Prepares the property pointing to the JaCoCo runtime agent which is passed as VM argument when Maven the 
-                Failsafe plugin is executed. -->
-              <execution>
-                <id>pre-integration-test</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-                <configuration>
-                  <!-- Sets the path to the file which contains the execution data. -->
-                  <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                  <!-- Sets the name of the property containing the settings for JaCoCo runtime agent. -->
-                  <propertyName>failsafeArgLineIT</propertyName>
-                </configuration>
-              </execution>
-              <!-- Ensures that the code coverage report for integration tests after integration tests have been run. -->
-              <execution>
-                <id>post-integration-test</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <!-- Sets the path to the file which contains the execution data. -->
-                  <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                  <!-- Sets the output directory for the code coverage report. -->
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
+      <properties>
+        <skip.IntegrationTests>false</skip.IntegrationTests>
+      </properties>
     </profile>
     <profile>
       <id>verify-functionality</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.18.1</version>
-            <configuration>
-              <includes>
-                <include>**/*FT.java</include>
-              </includes>
-              <!-- Sets the VM argument line used when integration tests are run. -->
-              <argLine>${failsafeArgLineFT}</argLine>
-            </configuration>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.7.201606060606</version>
-            <executions>
-              <!-- Prepares the property pointing to the JaCoCo runtime agent which is passed as VM argument when Maven the 
-                Failsafe plugin is executed. -->
-              <execution>
-                <id>pre-integration-test</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-                <configuration>
-                  <!-- Sets the path to the file which contains the execution data. -->
-                  <destFile>${project.build.directory}/coverage-reports/jacoco-ft.exec</destFile>
-                  <!-- Sets the name of the property containing the settings for JaCoCo runtime agent. -->
-                  <propertyName>failsafeArgLineFT</propertyName>
-                </configuration>
-              </execution>
-              <!-- Ensures that the code coverage report for integration tests after integration tests have been run. -->
-              <execution>
-                <id>post-integration-test</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <!-- Sets the path to the file which contains the execution data. -->
-                  <dataFile>${project.build.directory}/coverage-reports/jacoco-ft.exec</dataFile>
-                  <!-- Sets the output directory for the code coverage report. -->
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-ft</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
+      <properties>
+        <skip.FunctionalTests>false</skip.FunctionalTests>
+      </properties>
     </profile>
   </profiles>
 
