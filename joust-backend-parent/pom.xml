@@ -218,18 +218,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.7</version>
+          <version>3.0.1</version>
           <goals>
             <goal>resources</goal>
           </goals>
           <configuration>
             <encoding>UTF-8</encoding>
-            <resources>
-              <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-              </resource>
-            </resources>
           </configuration>
         </plugin>
         <plugin>
@@ -284,7 +278,6 @@
                   <build.timestamp>test</build.timestamp>
                   <build.version>test-version</build.version>
                   <build.label>test.label</build.label>
-
                   <joust.drop-database>true</joust.drop-database>
                 </environmentVariables>
               </configuration>
