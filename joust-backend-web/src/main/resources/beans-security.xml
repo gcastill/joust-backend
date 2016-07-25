@@ -11,36 +11,6 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-  <security:http pattern="/oauth/token" create-session="stateless" authentication-manager-ref="clientAuthenticationManager"
-    use-expressions="false">
-    <security:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
-    <security:anonymous enabled="false" />
-    <security:http-basic entry-point-ref="clientAuthenticationEntryPoint" />
-    <security:custom-filter ref="clientCredentialsTokenEndpointFilter" after="BASIC_AUTH_FILTER" />
-    <security:access-denied-handler ref="oauthAccessDeniedHandler" />
-    <security:csrf disabled="true" />
-  </security:http>
-  <security:http pattern="/oauth/google" create-session="stateless" authentication-manager-ref="clientAuthenticationManager"
-    use-expressions="false">
-    <security:intercept-url pattern="/oauth/google" access="IS_AUTHENTICATED_FULLY" />
-    <security:anonymous enabled="false" />
-    <security:http-basic entry-point-ref="clientAuthenticationEntryPoint" />
-    <security:custom-filter ref="clientCredentialsTokenEndpointFilter" after="BASIC_AUTH_FILTER" />
-    <security:access-denied-handler ref="oauthAccessDeniedHandler" />
-    <security:csrf disabled="true" />
-  </security:http>
-
-
-  <!-- The OAuth2 protected resources are separated out into their own block so we can deal with authorization and error 
-    handling separately. This isn't mandatory, but it makes it easier to control the behaviour. -->
-  <security:http pattern="/rest/**" create-session="never" entry-point-ref="oauthAuthenticationEntryPoint"
-    access-decision-manager-ref="accessDecisionManager" use-expressions="false">
-    <security:anonymous enabled="false" />
-    <security:intercept-url pattern="/rest/**" access="ROLE_CLIENT" />
-    <security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
-    <security:access-denied-handler ref="oauthAccessDeniedHandler" />
-    <security:csrf disabled="true" />
-  </security:http>
 
   <!-- authorization-server aka AuthorizationServerTokenServices is an interface that defines everything necessary for token 
     management -->
