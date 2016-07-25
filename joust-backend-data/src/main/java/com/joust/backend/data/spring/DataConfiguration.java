@@ -67,7 +67,6 @@ public class DataConfiguration {
   public Flyway flyway() throws Exception {
     Flyway flyway = new Flyway();
     flyway.setDataSource(dataSource());
-    flyway.clean();
     flyway.migrate();
     return flyway;
   }
