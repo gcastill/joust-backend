@@ -280,8 +280,8 @@
                 <skipITs>${skip.IntegrationTests}</skipITs>
                 <environmentVariables>
                   <PORT>${httpPort}</PORT>
-                  <project.version>${project.version}</project.version>
-                  <build.timestamp>${build.timestamp}</build.timestamp>
+                  <project.version>test</project.version>
+                  <build.timestamp>test</build.timestamp>
                   <joust.drop-database>true</joust.drop-database>
                 </environmentVariables>
               </configuration>
@@ -300,11 +300,11 @@
                 <argLine>${failsafeArgLineFT}</argLine>
                 <environmentVariables>
                   <PORT>${httpPort}</PORT>
-                  <project.version>${project.version}</project.version>
-                  <build.timestamp>${build.timestamp}</build.timestamp>
+                  <project.version>test</project.version>
+                  <build.timestamp>test</build.timestamp>
                   <joust.drop-database>true</joust.drop-database>
                 </environmentVariables>
-                <skipITs>$skip.FunctionalTests}</skipITs>
+                <skipITs>${skip.FunctionalTests}</skipITs>
               </configuration>
             </execution>
           </executions>

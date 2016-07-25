@@ -11,10 +11,14 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter;
@@ -31,13 +35,58 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.vote.ScopeVoter;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+@EnableWebSecurity
 @Configuration
 @ImportResource({ "classpath:beans-security.xml" })
-public class SecurityConfiguration {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Autowired
   private DataSource dataSource;
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+
+    http
+        //
+        .requestMatchers().antMatchers("/oauth/**", "/rest/**").and()
+
+        //
+        .userDetailsService(clientDetailsUserService())
+        //
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        //
+        .cors().disable()
+        //
+        .csrf().disable()
+        //
+        .anonymous().disable()
+        //
+        .httpBasic().authenticationEntryPoint(clientAuthenticationEntryPoint()).and()
+        //
+        .addFilterBefore(resourceServerFilter(tokenServices()), BasicAuthenticationFilter.class)
+        //
+        .addFilterAfter(clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter.class)
+        //
+        .authorizeRequests().accessDecisionManager(accessDecisionManager()).and()
+        //
+        .authorizeRequests().antMatchers("/oauth/token").fullyAuthenticated().and()
+        //
+        .authorizeRequests().antMatchers("/oauth/google").fullyAuthenticated().and()
+        //
+        .authorizeRequests().antMatchers("/rest/**").hasRole("ROLE_CLIENT").and()
+        //
+        .exceptionHandling().accessDeniedHandler(oauthAccessDeniedHandler())
+        //
+        .authenticationEntryPoint(oauthAuthenticationEntryPoint());
+
+  }
+
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.jdbcAuthentication().dataSource(dataSource);
+  }
 
   @Bean
   public JdbcTokenStore tokenStore() {
@@ -106,7 +155,7 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  public AuthenticationManager clientAuthenticationManager() {
+  public ProviderManager clientAuthenticationManager() {
     DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
     dao.setUserDetailsService(clientDetailsUserService());
     ProviderManager bean = new ProviderManager(asList(dao));
@@ -121,7 +170,7 @@ public class SecurityConfiguration {
   }
 
   @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-  public AuthenticationManager authenticationManager() {
+  public ProviderManager authenticationManager() {
     DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
     dao.setUserDetailsService(userDetailsService());
     ProviderManager bean = new ProviderManager(asList(dao));
@@ -151,4 +200,5 @@ public class SecurityConfiguration {
   OAuth2WebSecurityExpressionHandler oauthWebExpressionHandler() {
     return new OAuth2WebSecurityExpressionHandler();
   }
+
 }

@@ -11,24 +11,20 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-
   <security:http pattern="/oauth/token" create-session="stateless" authentication-manager-ref="clientAuthenticationManager"
     use-expressions="false">
     <security:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
     <security:anonymous enabled="false" />
     <security:http-basic entry-point-ref="clientAuthenticationEntryPoint" />
-    <!-- include this only if you need to authenticate clients via request parameters -->
     <security:custom-filter ref="clientCredentialsTokenEndpointFilter" after="BASIC_AUTH_FILTER" />
     <security:access-denied-handler ref="oauthAccessDeniedHandler" />
     <security:csrf disabled="true" />
   </security:http>
-
   <security:http pattern="/oauth/google" create-session="stateless" authentication-manager-ref="clientAuthenticationManager"
     use-expressions="false">
     <security:intercept-url pattern="/oauth/google" access="IS_AUTHENTICATED_FULLY" />
     <security:anonymous enabled="false" />
     <security:http-basic entry-point-ref="clientAuthenticationEntryPoint" />
-    <!-- include this only if you need to authenticate clients via request parameters -->
     <security:custom-filter ref="clientCredentialsTokenEndpointFilter" after="BASIC_AUTH_FILTER" />
     <security:access-denied-handler ref="oauthAccessDeniedHandler" />
     <security:csrf disabled="true" />
