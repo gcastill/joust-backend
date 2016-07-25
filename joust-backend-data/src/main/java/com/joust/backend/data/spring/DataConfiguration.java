@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @EnableTransactionManagement
 @Configuration
 public class DataConfiguration {
@@ -67,6 +70,10 @@ public class DataConfiguration {
   public Flyway flyway() throws Exception {
     Flyway flyway = new Flyway();
     flyway.setDataSource(dataSource());
+    if (environment.getProperty("joust.drop-database", Boolean.class, false)) {
+      log.warn("dropping the database");
+      flyway.clean();
+    }
     flyway.migrate();
     return flyway;
   }
