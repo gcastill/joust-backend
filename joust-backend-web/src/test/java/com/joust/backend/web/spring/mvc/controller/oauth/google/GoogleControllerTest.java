@@ -11,11 +11,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.provisioning.UserDetailsManager;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.joust.backend.core.data.UserProfileStore;
 import com.joust.backend.test.meanbean.BeanTesterBuilder;
-import com.joust.backend.web.spring.mvc.controller.oauth.google.GoogleController;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GoogleControllerTest {
@@ -23,11 +21,7 @@ public class GoogleControllerTest {
   private TokenEndpoint mockTokenEndPoint;
 
   @Mock
-  private JsonFactory mockGoogleJsonFactory;
-
-  @Mock
-  private HttpTransport mockGoogleHttpTransport;
-
+  private GoogleIdTokenVerifier mockGoogleIdTokenVerifier;
   @Mock
   private UserDetailsManager mockUserDetailsService;
 
@@ -38,10 +32,8 @@ public class GoogleControllerTest {
   public void testBean() {
     new BeanTesterBuilder().withFactory(TokenEndpoint.class, () -> {
       return mockTokenEndPoint;
-    }).withFactory(JsonFactory.class, () -> {
-      return mockGoogleJsonFactory;
-    }).withFactory(HttpTransport.class, () -> {
-      return mockGoogleHttpTransport;
+    }).withFactory(GoogleIdTokenVerifier.class, () -> {
+      return mockGoogleIdTokenVerifier;
     }).withFactory(UserDetailsManager.class, () -> {
       return mockUserDetailsService;
     }).withFactory(UserProfileStore.class, () -> {

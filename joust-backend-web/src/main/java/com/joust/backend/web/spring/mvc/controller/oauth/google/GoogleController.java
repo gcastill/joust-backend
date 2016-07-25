@@ -58,18 +58,6 @@ public class GoogleController {
       .singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
   @Resource
-  private String googleClientId;
-
-  @Resource
-  private JsonFactory googleJsonFactory;
-
-  @Resource
-  private HttpTransport googleHttpTransport;
-
-  @Resource
-  private String googleIssuer;
-
-  @Resource
   private UserDetailsManager userDetailsService;
 
   @Resource
@@ -78,12 +66,12 @@ public class GoogleController {
   @Resource
   private TokenEndpoint tokenEndpoint;
 
+  @Resource
+  private GoogleIdTokenVerifier verifier;
+
   private UserProfile verifyGoogleLogin(String idToken) throws IOException, GeneralSecurityException {
     // TODO: clean this mess up. This should be in a service. There
     // shouldn't be any business logic inside a controller.
-
-    GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(googleHttpTransport, googleJsonFactory)
-        .setAudience(Arrays.asList(googleClientId)).setIssuer(googleIssuer).build();
 
     GoogleIdToken googleIdToken = verifier.verify(idToken);
     if (googleIdToken == null) {
@@ -100,11 +88,7 @@ public class GoogleController {
     UserProfileBuilder builder = newUser ? UserProfile.builder().id(UUID.randomUUID()) : fromDatabase.toBuilder();
 
     if (!payload.getEmailVerified()) {
-      // TODO: throw an exception? that seems like the cheapest way to
-      // handle
-      // this case. We don't want fake google users running around in
-      // our
-      // system.
+      throw new GeneralSecurityException("Email not validated.");
     }
 
     builder.email(payload.getEmail());

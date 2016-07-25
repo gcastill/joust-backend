@@ -1,5 +1,7 @@
 package com.joust.backend.web.spring.mvc;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -8,6 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -47,6 +50,14 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
   @Bean
   public String googleIssuer() {
     return "accounts.google.com";
+  }
+
+  @Bean
+  public GoogleIdTokenVerifier googleIDTokenVerifier() {
+    GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(googleHttpTransport(), googleJsonFactory())
+        .setAudience(Arrays.asList(googleClientId())).setIssuer(googleIssuer()).build();
+
+    return verifier;
   }
 
 }
