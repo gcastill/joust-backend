@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -30,6 +29,7 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
   @Bean
   public static PropertyPlaceholderConfigurer getPropertyPlaceholderConfigurer() {
     PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
+   
     return configurer;
   }
 

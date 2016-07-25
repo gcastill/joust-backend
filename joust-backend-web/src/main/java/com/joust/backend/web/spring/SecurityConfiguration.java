@@ -35,6 +35,7 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.vote.ScopeVoter;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @EnableWebSecurity
@@ -51,7 +52,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http
         //
         .requestMatchers().antMatchers("/oauth/**", "/rest/**").and()
-
         //
         .userDetailsService(clientDetailsUserService())
         //
@@ -65,7 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //
         .httpBasic().authenticationEntryPoint(clientAuthenticationEntryPoint()).and()
         //
-        .addFilterBefore(resourceServerFilter(tokenServices()), BasicAuthenticationFilter.class)
+        .addFilterBefore(resourceServerFilter(), BasicAuthenticationFilter.class)
         //
         .addFilterAfter(clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter.class)
         //
@@ -75,7 +75,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //
         .authorizeRequests().antMatchers("/oauth/google").fullyAuthenticated().and()
         //
-        .authorizeRequests().antMatchers("/rest/**").hasRole("ROLE_CLIENT").and()
+        .authorizeRequests().antMatchers("/rest/**").hasRole("CLIENT").and()
         //
         .exceptionHandling().accessDeniedHandler(oauthAccessDeniedHandler())
         //
@@ -104,7 +104,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public DefaultTokenServices tokenServices() {
+  public ResourceServerTokenServices tokenServices() {
     DefaultTokenServices bean = new DefaultTokenServices();
     bean.setTokenStore(tokenStore());
     bean.setSupportRefreshToken(true);
@@ -123,7 +123,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Bean
   public UnanimousBased accessDecisionManager() {
-    UnanimousBased bean = new UnanimousBased(asList(new ScopeVoter(), new RoleVoter(), new AuthenticatedVoter()));
+    UnanimousBased bean = new UnanimousBased(
+        asList(new WebExpressionVoter(), new ScopeVoter(), new RoleVoter(), new AuthenticatedVoter()));
     return bean;
   }
 
@@ -178,11 +179,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public OAuth2AuthenticationProcessingFilter resourceServerFilter(ResourceServerTokenServices tokenServices) {
+  public OAuth2AuthenticationProcessingFilter resourceServerFilter() {
 
     OAuth2AuthenticationManager authManager = new OAuth2AuthenticationManager();
     authManager.setResourceId("test");
-    authManager.setTokenServices(tokenServices);
+    authManager.setTokenServices(tokenServices());
 
     OAuth2AuthenticationProcessingFilter bean = new OAuth2AuthenticationProcessingFilter();
     bean.setAuthenticationManager(authManager);
@@ -197,7 +198,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  OAuth2WebSecurityExpressionHandler oauthWebExpressionHandler() {
+  public OAuth2WebSecurityExpressionHandler oauthWebExpressionHandler() {
     return new OAuth2WebSecurityExpressionHandler();
   }
 

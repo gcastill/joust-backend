@@ -282,6 +282,9 @@
                   <PORT>${httpPort}</PORT>
                   <project.version>test</project.version>
                   <build.timestamp>test</build.timestamp>
+                  <build.version>test-version</build.version>
+                  <build.label>test.label</build.label>
+
                   <joust.drop-database>true</joust.drop-database>
                 </environmentVariables>
               </configuration>
@@ -303,6 +306,8 @@
                   <project.version>test</project.version>
                   <build.timestamp>test</build.timestamp>
                   <joust.drop-database>true</joust.drop-database>
+                  <build.version>test-version</build.version>
+                  <build.label>test.label</build.label>
                 </environmentVariables>
                 <skipITs>${skip.FunctionalTests}</skipITs>
               </configuration>
