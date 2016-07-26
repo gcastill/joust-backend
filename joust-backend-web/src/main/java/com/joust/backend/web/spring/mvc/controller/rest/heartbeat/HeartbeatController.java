@@ -2,7 +2,9 @@ package com.joust.backend.web.spring.mvc.controller.rest.heartbeat;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.annotation.Resource;
+
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,17 +21,13 @@ import lombok.Setter;
 @Setter
 public class HeartbeatController {
 
-  @Value("${build.version}")
-  private String buildVersion;
-
-  @Value("${build.label}")
-  private String buildLabel;
+  @Resource
+  private Heartbeat heartbeat;
 
   @RequestMapping(method = GET)
   public ResponseEntity<Heartbeat> getHeartbeat() {
 
-    Heartbeat hb = Heartbeat.builder().buildLabel(buildLabel).version(buildVersion).message("I'm here").build();
-    ResponseEntity<Heartbeat> response = new ResponseEntity<Heartbeat>(hb, HttpStatus.OK);
+    ResponseEntity<Heartbeat> response = new ResponseEntity<Heartbeat>(heartbeat.toBuilder().build(), HttpStatus.OK);
     return response;
   }
 }
