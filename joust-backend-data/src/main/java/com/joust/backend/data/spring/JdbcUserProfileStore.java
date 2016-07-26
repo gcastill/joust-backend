@@ -24,21 +24,17 @@ import com.joust.backend.core.model.ExternalProfileSource;
 import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 
-@Value
+
 @Builder(toBuilder = true)
 @Transactional
 public final class JdbcUserProfileStore implements UserProfileStore {
 
-  private NamedParameterJdbcTemplate jdbcTemplate;
-  private SqlConfig sql;
-  private RowMapper<UserProfile> rowMapper;
+  private final NamedParameterJdbcTemplate jdbcTemplate;
+  private final SqlConfig sql;
+  private final RowMapper<UserProfile> rowMapper;
 
   @Override
   public UserProfile getUserProfile(@NonNull UUID id) {
@@ -83,15 +79,14 @@ public final class JdbcUserProfileStore implements UserProfileStore {
         .addValue(USER_PROFILE_ID, externalProfileSource.getUserProfileId());
   }
 
-  @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-  @AllArgsConstructor
+  
   @Builder
   public static class SqlConfig {
-    private String mergeUserProfileSql;
-    private String getUserProfileSql;
-    private String getUserProfileByExternalSourceSql;
-    private String saveExternalProfileSourceSql;
-    private String searchUserProfilesSql;
+    private final String mergeUserProfileSql;
+    private final String getUserProfileSql;
+    private final String getUserProfileByExternalSourceSql;
+    private final String saveExternalProfileSourceSql;
+    private final String searchUserProfilesSql;
   }
 
 }
