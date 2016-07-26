@@ -34,7 +34,7 @@ if $cygwin; then
 fi
 
 
-COMMAND="java $JAVA_OPTS -cp $CLASSPATH com.joust.backend.web.spring.AppMain"
+COMMAND="java $JAVA_OPTS -cp $CLASSPATH com.joust.backend.web.spring.Application"
 echo $COMMAND;
 $COMMAND;
 

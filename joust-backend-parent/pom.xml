@@ -23,7 +23,8 @@
     <maven.build.timestamp.format>yyyyMMdd.HHmmss</maven.build.timestamp.format>
     <spring.version>4.3.1.RELEASE</spring.version>
     <tomcat.version>8.0.32</tomcat.version>
-    <slf4j.version>1.7.12</slf4j.version>
+    <slf4j.version>1.7.21</slf4j.version>
+    <logback.version>1.1.7</logback.version>
     <spring.security.version>4.1.1.RELEASE</spring.security.version>
     <skip.FunctionalTests>true</skip.FunctionalTests>
     <skip.IntegrationTests>true</skip.IntegrationTests>
@@ -77,11 +78,14 @@
       </dependency>
 
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>${slf4j.version}</version>
-        <!-- allows for logging in test cases. deployable artifacts can override scope to be compile. -->
-        <scope>test</scope>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.version}</version>
       </dependency>
 
 
