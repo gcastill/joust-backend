@@ -24,9 +24,12 @@ import com.joust.backend.core.model.ExternalProfileSource;
 import com.joust.backend.core.model.ExternalProfileSource.Source;
 import com.joust.backend.core.model.UserProfile;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.experimental.FieldDefaults;
 
 @Value
 @Builder(toBuilder = true)
@@ -80,7 +83,8 @@ public final class JdbcUserProfileStore implements UserProfileStore {
         .addValue(USER_PROFILE_ID, externalProfileSource.getUserProfileId());
   }
 
-  @Value
+  @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+  @AllArgsConstructor
   @Builder
   public static class SqlConfig {
     private String mergeUserProfileSql;
