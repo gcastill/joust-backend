@@ -4,7 +4,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import javax.annotation.Resource;
 
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,6 @@ public class HeartbeatController {
 
   @RequestMapping(method = GET)
   public ResponseEntity<Heartbeat> getHeartbeat() {
-
     ResponseEntity<Heartbeat> response = new ResponseEntity<Heartbeat>(heartbeat.toBuilder().build(), HttpStatus.OK);
     return response;
   }

@@ -7,14 +7,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.joust.backend.web.spring.mvc.controller.oauth.google.GoogleControllerFunctionalCase;
-import com.joust.backend.web.spring.mvc.controller.rest.heartbeat.HeartbeatControllerFunctionalCase;
+import com.joust.backend.web.spring.mvc.controller.oauth.google.GoogleControllerFT;
+import com.joust.backend.web.spring.mvc.controller.rest.heartbeat.HeartbeatControllerFT;
 
 import lombok.SneakyThrows;
 
 @RunWith(Suite.class)
-@SuiteClasses({ HeartbeatControllerFunctionalCase.class, GoogleControllerFunctionalCase.class, AppMainFunctionalCase.class })
-public class SuiteFT {
+@SuiteClasses({ HeartbeatControllerFT.class, GoogleControllerFT.class, AppMainFT.class })
+public class FunctionalSuite {
 
   @ClassRule
   public static ExternalResource server = new ExternalResource() {

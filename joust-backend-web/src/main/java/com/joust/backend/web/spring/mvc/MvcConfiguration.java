@@ -57,7 +57,6 @@ public class MvcConfiguration extends WebMvcConfigurationSupport {
   public GoogleIdTokenVerifier googleIDTokenVerifier() {
     GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(googleHttpTransport(), googleJsonFactory())
         .setAudience(Arrays.asList(googleClientId())).setIssuer(googleIssuer()).build();
-
     return verifier;
   }
 
