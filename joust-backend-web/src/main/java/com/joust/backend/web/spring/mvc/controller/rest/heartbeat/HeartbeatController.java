@@ -24,7 +24,7 @@ public class HeartbeatController {
   private Heartbeat heartbeat;
 
   @RequestMapping(method = GET)
-  public ResponseEntity<Heartbeat> getHeartbeat() {
+  public ResponseEntity<Heartbeat> get() {
     ResponseEntity<Heartbeat> response = new ResponseEntity<Heartbeat>(heartbeat.toBuilder().build(), HttpStatus.OK);
     return response;
   }
