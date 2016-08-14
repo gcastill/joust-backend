@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 import com.joust.backend.data.spring.DataConfiguration;
 
 @SpringBootApplication
-@Import({ DataConfiguration.class, WebConfiguration.class, SecurityConfiguration.class })
+@Import({ DataConfiguration.class, WebConfiguration.class })
 public class Application {
 
   public static void main(String[] args) {
