@@ -12,16 +12,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.joust.backend.data.spring.DataConfiguration;
-import com.joust.backend.web.spring.WebConfiguration;
-import com.joust.backend.web.spring.security.OAuth2ServerConfiguration;
-import com.joust.backend.web.spring.security.SecurityConfiguration;
+import com.joust.backend.web.spring.Application;
 
 @RunWith(SpringRunner.class)
 
 @WebAppConfiguration
-@ContextHierarchy({ @ContextConfiguration(classes = { DataConfiguration.class, WebConfiguration.class,
-    SecurityConfiguration.class, OAuth2ServerConfiguration.class }) })
+@ContextHierarchy({ @ContextConfiguration(classes = { Application.class }) })
 public abstract class AbstractWebIT {
 
   @Autowired
