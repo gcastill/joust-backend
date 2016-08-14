@@ -2,13 +2,14 @@ package com.joust.backend.web.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Import;
 
 import com.joust.backend.data.spring.DataConfiguration;
 
 @SpringBootApplication
 @Import({ DataConfiguration.class, WebConfiguration.class })
-public class Application {
+public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
     System.setProperty("server.port", System.getenv().getOrDefault("PORT", "8080"));

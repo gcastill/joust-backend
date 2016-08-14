@@ -14,7 +14,7 @@
 
   <logger name="org.springframework.security" level='debug' />
 
-  <logger name="org.springframework" level='info' />
+  <logger name="org.springframework" level='debug' />
 
   <root level='info'>
     <appender-ref ref="console" />

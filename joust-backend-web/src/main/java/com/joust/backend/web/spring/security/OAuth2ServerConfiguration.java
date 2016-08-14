@@ -1,4 +1,4 @@
-package com.joust.backend.web.spring;
+package com.joust.backend.web.spring.security;
 
 import javax.sql.DataSource;
 
@@ -17,14 +17,29 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+
+import com.joust.backend.data.spring.DataConfiguration;
 
 @Configuration
 public class OAuth2ServerConfiguration {
 
   private static final String JOUST_RESOURCE_ID = "joust";
+
+  @Autowired
+  DataConfiguration datConfig;
+
+  @Autowired
+  private DataSource dataSource;
+
+  @Bean
+  public TokenStore tokenStore() {
+    return new JdbcTokenStore(dataSource);
+  }
 
   @Configuration
   @EnableResourceServer
@@ -46,7 +61,8 @@ public class OAuth2ServerConfiguration {
           //
           .authorizeRequests()
           //
-          .antMatchers("/oauth/token").fullyAuthenticated().antMatchers("/oauth/google").fullyAuthenticated()
+          .antMatchers("/oauth/token", "/oauth/google").fullyAuthenticated()
+          //
           .antMatchers("/rest/**").hasRole("CLIENT").and()
           //
           .cors().disable()
@@ -65,13 +81,13 @@ public class OAuth2ServerConfiguration {
   protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    private TokenStore tokenStore;
-
-    @Autowired
-    private UserApprovalHandler userApprovalHandler;
+    private ClientDetailsService clientDetails;
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    public TokenStore tokenStore;
 
     @Autowired
     @Qualifier("authenticationManagerBean")
@@ -83,20 +99,24 @@ public class OAuth2ServerConfiguration {
 
     }
 
-    @Bean
-    public TokenStore tokenStore() {
-      return new JdbcTokenStore(dataSource);
-    }
-
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-      endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler)
+      endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler())
           .authenticationManager(authenticationManager);
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
       oauthServer.realm("joust/client");
+    }
+
+    @Bean
+    public TokenStoreUserApprovalHandler userApprovalHandler() {
+      TokenStoreUserApprovalHandler bean = new TokenStoreUserApprovalHandler();
+      bean.setClientDetailsService(clientDetails);
+      bean.setRequestFactory(new DefaultOAuth2RequestFactory(clientDetails));
+      bean.setTokenStore(tokenStore);
+      return bean;
     }
 
   }
