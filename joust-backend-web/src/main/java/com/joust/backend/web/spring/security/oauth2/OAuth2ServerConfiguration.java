@@ -74,7 +74,7 @@ public class OAuth2ServerConfiguration {
           //
           .antMatchers("/oauth/token").fullyAuthenticated()
           //
-          .antMatchers("/rest/**").hasRole("CLIENT").and()
+          .antMatchers("/rest/**").hasRole("USER").and()
           //
           .cors().disable()
           //
