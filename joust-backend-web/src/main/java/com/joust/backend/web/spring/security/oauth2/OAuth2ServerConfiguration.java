@@ -1,4 +1,6 @@
-package com.joust.backend.web.spring.security;
+package com.joust.backend.web.spring.security.oauth2;
+
+import java.util.Arrays;
 
 import javax.sql.DataSource;
 
@@ -18,12 +20,18 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.provisioning.UserDetailsManager;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.joust.backend.core.data.UserProfileStore;
 import com.joust.backend.data.spring.DataConfiguration;
+import com.joust.backend.web.spring.mvc.controller.oauth.google.GoogleTokenGranter;
 
 @Configuration
 public class OAuth2ServerConfiguration {
@@ -57,11 +65,11 @@ public class OAuth2ServerConfiguration {
           //
           .requestMatchers()
           //
-          .antMatchers("/oauth/**", "/rest/**").and()
+          .antMatchers("/rest/**").and()
           //
           .authorizeRequests()
           //
-          .antMatchers("/oauth/token", "/oauth/google").fullyAuthenticated()
+          .antMatchers("/oauth/token").fullyAuthenticated()
           //
           .antMatchers("/rest/**").hasRole("CLIENT").and()
           //
@@ -93,6 +101,16 @@ public class OAuth2ServerConfiguration {
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private AuthorizationServerTokenServices tokenServices;
+
+    @Autowired
+    private UserDetailsManager userDetailsService;
+    @Autowired
+    private UserProfileStore userProfileStore;
+    @Autowired
+    private GoogleIdTokenVerifier verifier;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
       clients.jdbc(dataSource);
@@ -101,8 +119,14 @@ public class OAuth2ServerConfiguration {
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+
       endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler())
           .authenticationManager(authenticationManager);
+
+      CompositeTokenGranter granter = new CompositeTokenGranter(
+          Arrays.asList(new GoogleTokenGranter(tokenServices, clientDetails, endpoints.getOAuth2RequestFactory(),
+              userDetailsService, userProfileStore, verifier), endpoints.getTokenGranter()));
+      endpoints.tokenGranter(granter);
     }
 
     @Override
