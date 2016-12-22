@@ -70,7 +70,7 @@ public class DataConfiguration {
   public Flyway flyway() throws Exception {
     Flyway flyway = new Flyway();
     flyway.setDataSource(dataSource());
-    if (environment.getProperty("joust.drop-database", Boolean.class, false)) {
+    if (environment.getProperty("joust.drop-database", Boolean.class, true)) {
       log.warn("dropping the database");
       flyway.clean();
     }
